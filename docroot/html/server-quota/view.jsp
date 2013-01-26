@@ -44,7 +44,16 @@ This is the <b>Server Quota</b> portlet.
 	<liferay-ui:search-container-column-text name="actions">
       	
       	<liferay-ui:icon-menu>
+      	
+      		<c:set var="cmd">
+      			<c:choose>
+      				<c:when test="${serverVO.quota.classPK eq 0 }"><%=Constants.ADD%></c:when>
+      				<c:otherwise><%=Constants.UPDATE%></c:otherwise>
+      			</c:choose>
+      		</c:set>
+      	
       		<portlet:renderURL var="editServerURL">
+				<portlet:param name="<%=Constants.CMD%>" value="${cmd}"/>
 				<portlet:param name="backURL" value="/html/server-quota/view.jsp"/>
 				<portlet:param name="quotaId" value="${serverVO.quota.quotaId }"/>
 				<portlet:param name="classPK" value="${serverVO.quota.classPK }"/>
