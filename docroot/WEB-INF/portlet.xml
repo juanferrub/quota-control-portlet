@@ -18,7 +18,7 @@
 		<supported-locale>es</supported-locale>
 		<supported-locale>eu</supported-locale>
 		<supported-locale>gl</supported-locale>
-		<resource-bundle>content.Language</resource-bundle>
+		<resource-bundle>content.serverquota.Language</resource-bundle>
 		<portlet-info>
 			<title>Server Quota</title>
 			<short-title>Server Quota</short-title>
@@ -54,7 +54,7 @@
 		<supported-locale>es</supported-locale>
 		<supported-locale>eu</supported-locale>
 		<supported-locale>gl</supported-locale>
-		<resource-bundle>content.Language</resource-bundle>
+		<resource-bundle>content.sitequota.Language</resource-bundle>
 		<portlet-info>
 			<title>Sites Quota</title>
 			<short-title>Sites Quota</short-title>
@@ -88,6 +88,12 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+		<supported-locale>ca</supported-locale>
+		<supported-locale>en</supported-locale>
+		<supported-locale>es</supported-locale>
+		<supported-locale>eu</supported-locale>
+		<supported-locale>gl</supported-locale>
+		<resource-bundle>content.myquota.Language</resource-bundle>
 		<portlet-info>
 			<title>My Quota</title>
 			<short-title>NewPortlet</short-title>
