@@ -116,33 +116,52 @@ public class QuotaLocalServiceClpInvoker {
 
 		_methodParameterTypes45 = new String[] { "long", "long" };
 
-		_methodName46 = "getQuotaByClassNameIdClassPK";
+		_methodName46 = "getCompanyQuota";
 
-		_methodParameterTypes46 = new String[] { "long", "long" };
+		_methodParameterTypes46 = new String[] { "long" };
 
-		_methodName47 = "getDLFileEntryTotalSize";
+		_methodName47 = "getGroupQuota";
 
 		_methodParameterTypes47 = new String[] { "long" };
 
-		_methodName48 = "hasQuota";
+		_methodName48 = "getQuotaByClassNameIdClassPK";
 
-		_methodParameterTypes48 = new String[] { "long", "long", "long" };
+		_methodParameterTypes48 = new String[] { "long", "long" };
 
-		_methodName49 = "decreaseQuotaUsage";
+		_methodName49 = "getDLFileEntryTotalSize";
 
-		_methodParameterTypes49 = new String[] { "long", "long", "long" };
+		_methodParameterTypes49 = new String[] { "long" };
 
-		_methodName50 = "increaseQuotaUsage";
+		_methodName50 = "getSitesQuotas";
 
-		_methodParameterTypes50 = new String[] { "long", "long", "long" };
+		_methodParameterTypes50 = new String[] { "long", "int", "int" };
 
-		_methodName51 = "updateQuota";
+		_methodName51 = "getSitesQuotas";
 
-		_methodParameterTypes51 = new String[] { "long", "long", "long" };
+		_methodParameterTypes51 = new String[] {
+				"long", "int", "int",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			};
 
-		_methodName52 = "updateQuota";
+		_methodName52 = "hasQuota";
 
-		_methodParameterTypes52 = new String[] {
+		_methodParameterTypes52 = new String[] { "long", "long", "long" };
+
+		_methodName53 = "decreaseQuotaUsage";
+
+		_methodParameterTypes53 = new String[] { "long", "long", "long" };
+
+		_methodName54 = "increaseQuotaUsage";
+
+		_methodParameterTypes54 = new String[] { "long", "long", "long" };
+
+		_methodName55 = "updateQuota";
+
+		_methodParameterTypes55 = new String[] { "long", "long", "long" };
+
+		_methodName56 = "updateQuota";
+
+		_methodParameterTypes56 = new String[] {
 				"long", "long", "long", "int", "long", "long", "int"
 			};
 	}
@@ -264,45 +283,70 @@ public class QuotaLocalServiceClpInvoker {
 
 		if (_methodName46.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes46, parameterTypes)) {
-			return QuotaLocalServiceUtil.getQuotaByClassNameIdClassPK(((Long)arguments[0]).longValue(),
-				((Long)arguments[1]).longValue());
+			return QuotaLocalServiceUtil.getCompanyQuota(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName47.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes47, parameterTypes)) {
-			return QuotaLocalServiceUtil.getDLFileEntryTotalSize(((Long)arguments[0]).longValue());
+			return QuotaLocalServiceUtil.getGroupQuota(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName48.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes48, parameterTypes)) {
+			return QuotaLocalServiceUtil.getQuotaByClassNameIdClassPK(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
+		}
+
+		if (_methodName49.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes49, parameterTypes)) {
+			return QuotaLocalServiceUtil.getDLFileEntryTotalSize(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName50.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes50, parameterTypes)) {
+			return QuotaLocalServiceUtil.getSitesQuotas(((Long)arguments[0]).longValue(),
+				((Integer)arguments[1]).intValue(),
+				((Integer)arguments[2]).intValue());
+		}
+
+		if (_methodName51.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes51, parameterTypes)) {
+			return QuotaLocalServiceUtil.getSitesQuotas(((Long)arguments[0]).longValue(),
+				((Integer)arguments[1]).intValue(),
+				((Integer)arguments[2]).intValue(),
+				(com.liferay.portal.kernel.util.OrderByComparator)arguments[3]);
+		}
+
+		if (_methodName52.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes52, parameterTypes)) {
 			return QuotaLocalServiceUtil.hasQuota(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue(),
 				((Long)arguments[2]).longValue());
 		}
 
-		if (_methodName49.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes49, parameterTypes)) {
+		if (_methodName53.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes53, parameterTypes)) {
 			QuotaLocalServiceUtil.decreaseQuotaUsage(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue(),
 				((Long)arguments[2]).longValue());
 		}
 
-		if (_methodName50.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes50, parameterTypes)) {
+		if (_methodName54.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes54, parameterTypes)) {
 			QuotaLocalServiceUtil.increaseQuotaUsage(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue(),
 				((Long)arguments[2]).longValue());
 		}
 
-		if (_methodName51.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes51, parameterTypes)) {
+		if (_methodName55.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes55, parameterTypes)) {
 			return QuotaLocalServiceUtil.updateQuota(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue(),
 				((Long)arguments[2]).longValue());
 		}
 
-		if (_methodName52.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes52, parameterTypes)) {
+		if (_methodName56.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes56, parameterTypes)) {
 			return QuotaLocalServiceUtil.updateQuota(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue(),
 				((Long)arguments[2]).longValue(),
@@ -369,4 +413,12 @@ public class QuotaLocalServiceClpInvoker {
 	private String[] _methodParameterTypes51;
 	private String _methodName52;
 	private String[] _methodParameterTypes52;
+	private String _methodName53;
+	private String[] _methodParameterTypes53;
+	private String _methodName54;
+	private String[] _methodParameterTypes54;
+	private String _methodName55;
+	private String[] _methodParameterTypes55;
+	private String _methodName56;
+	private String[] _methodParameterTypes56;
 }

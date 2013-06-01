@@ -116,33 +116,52 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 
 		_methodParameterTypes20 = new String[] { "long", "long" };
 
-		_methodName21 = "getQuotaByClassNameIdClassPK";
+		_methodName21 = "getCompanyQuota";
 
-		_methodParameterTypes21 = new String[] { "long", "long" };
+		_methodParameterTypes21 = new String[] { "long" };
 
-		_methodName22 = "getDLFileEntryTotalSize";
+		_methodName22 = "getGroupQuota";
 
 		_methodParameterTypes22 = new String[] { "long" };
 
-		_methodName23 = "hasQuota";
+		_methodName23 = "getQuotaByClassNameIdClassPK";
 
-		_methodParameterTypes23 = new String[] { "long", "long", "long" };
+		_methodParameterTypes23 = new String[] { "long", "long" };
 
-		_methodName24 = "decreaseQuotaUsage";
+		_methodName24 = "getDLFileEntryTotalSize";
 
-		_methodParameterTypes24 = new String[] { "long", "long", "long" };
+		_methodParameterTypes24 = new String[] { "long" };
 
-		_methodName25 = "increaseQuotaUsage";
+		_methodName25 = "getSitesQuotas";
 
-		_methodParameterTypes25 = new String[] { "long", "long", "long" };
+		_methodParameterTypes25 = new String[] { "long", "int", "int" };
 
-		_methodName26 = "updateQuota";
+		_methodName26 = "getSitesQuotas";
 
-		_methodParameterTypes26 = new String[] { "long", "long", "long" };
+		_methodParameterTypes26 = new String[] {
+				"long", "int", "int",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			};
 
-		_methodName27 = "updateQuota";
+		_methodName27 = "hasQuota";
 
-		_methodParameterTypes27 = new String[] {
+		_methodParameterTypes27 = new String[] { "long", "long", "long" };
+
+		_methodName28 = "decreaseQuotaUsage";
+
+		_methodParameterTypes28 = new String[] { "long", "long", "long" };
+
+		_methodName29 = "increaseQuotaUsage";
+
+		_methodParameterTypes29 = new String[] { "long", "long", "long" };
+
+		_methodName30 = "updateQuota";
+
+		_methodParameterTypes30 = new String[] { "long", "long", "long" };
+
+		_methodName31 = "updateQuota";
+
+		_methodParameterTypes31 = new String[] {
 				"long", "long", "long", "int", "long", "long", "int"
 			};
 	}
@@ -669,8 +688,7 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 
 	public org.lsug.quota.model.Quota addQuota(long classNameId, long classPK,
 		int quotaAlert, long quotaAssigned, long quotaUsed, int quotaStatus)
-		throws com.liferay.portal.kernel.exception.SystemException,
-			org.lsug.quota.NoSuchQuotaException {
+		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		try {
@@ -695,10 +713,6 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 
 			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
 				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof org.lsug.quota.NoSuchQuotaException) {
-				throw (org.lsug.quota.NoSuchQuotaException)t;
 			}
 
 			if (t instanceof RuntimeException) {
@@ -745,16 +759,13 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 		return ((Boolean)returnObj).booleanValue();
 	}
 
-	public org.lsug.quota.model.Quota getQuotaByClassNameIdClassPK(
-		long classNameId, long classPK)
-		throws com.liferay.portal.kernel.exception.SystemException,
-			org.lsug.quota.NoSuchQuotaException {
+	public org.lsug.quota.model.Quota getCompanyQuota(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		try {
 			returnObj = _invokableLocalService.invokeMethod(_methodName21,
-					_methodParameterTypes21,
-					new Object[] { classNameId, classPK });
+					_methodParameterTypes21, new Object[] { groupId });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -763,8 +774,55 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
 
-			if (t instanceof org.lsug.quota.NoSuchQuotaException) {
-				throw (org.lsug.quota.NoSuchQuotaException)t;
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (org.lsug.quota.model.Quota)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public org.lsug.quota.model.Quota getGroupQuota(long groupId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName22,
+					_methodParameterTypes22, new Object[] { groupId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (org.lsug.quota.model.Quota)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public org.lsug.quota.model.Quota getQuotaByClassNameIdClassPK(
+		long classNameId, long classPK)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName23,
+					_methodParameterTypes23,
+					new Object[] { classNameId, classPK });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
 
 			if (t instanceof RuntimeException) {
@@ -784,8 +842,8 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName22,
-					_methodParameterTypes22, new Object[] { dlFileEntryId });
+			returnObj = _invokableLocalService.invokeMethod(_methodName24,
+					_methodParameterTypes24, new Object[] { dlFileEntryId });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -806,14 +864,81 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 		return ((Long)returnObj).longValue();
 	}
 
+	public java.util.List<org.lsug.quota.model.Quota> getSitesQuotas(
+		long companyId, int start, int end) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName25,
+					_methodParameterTypes25,
+					new Object[] { companyId, start, end });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<org.lsug.quota.model.Quota>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public java.util.List<org.lsug.quota.model.Quota> getSitesQuotas(
+		long companyId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName26,
+					_methodParameterTypes26,
+					new Object[] {
+						companyId,
+						
+					start,
+						
+					end,
+						
+					ClpSerializer.translateInput(orderByComparator)
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<org.lsug.quota.model.Quota>)ClpSerializer.translateOutput(returnObj);
+	}
+
 	public boolean hasQuota(long groupId, long userId, long size)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName23,
-					_methodParameterTypes23,
+			returnObj = _invokableLocalService.invokeMethod(_methodName27,
+					_methodParameterTypes27,
 					new Object[] { groupId, userId, size });
 		}
 		catch (Throwable t) {
@@ -845,8 +970,8 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 			org.lsug.quota.NoSuchQuotaException,
 			org.lsug.quota.QuotaExceededException {
 		try {
-			_invokableLocalService.invokeMethod(_methodName24,
-				_methodParameterTypes24, new Object[] { groupId, userId, size });
+			_invokableLocalService.invokeMethod(_methodName28,
+				_methodParameterTypes28, new Object[] { groupId, userId, size });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -883,8 +1008,8 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 			org.lsug.quota.NoSuchQuotaException,
 			org.lsug.quota.QuotaExceededException {
 		try {
-			_invokableLocalService.invokeMethod(_methodName25,
-				_methodParameterTypes25, new Object[] { groupId, userId, size });
+			_invokableLocalService.invokeMethod(_methodName29,
+				_methodParameterTypes29, new Object[] { groupId, userId, size });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -922,8 +1047,8 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName26,
-					_methodParameterTypes26,
+			returnObj = _invokableLocalService.invokeMethod(_methodName30,
+					_methodParameterTypes30,
 					new Object[] { classNameId, classPK, fileSize });
 		}
 		catch (Throwable t) {
@@ -957,8 +1082,8 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName27,
-					_methodParameterTypes27,
+			returnObj = _invokableLocalService.invokeMethod(_methodName31,
+					_methodParameterTypes31,
 					new Object[] {
 						quotaId,
 						
@@ -1053,4 +1178,12 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 	private String[] _methodParameterTypes26;
 	private String _methodName27;
 	private String[] _methodParameterTypes27;
+	private String _methodName28;
+	private String[] _methodParameterTypes28;
+	private String _methodName29;
+	private String[] _methodParameterTypes29;
+	private String _methodName30;
+	private String[] _methodParameterTypes30;
+	private String _methodName31;
+	private String[] _methodParameterTypes31;
 }

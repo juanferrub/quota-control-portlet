@@ -272,8 +272,7 @@ public class QuotaLocalServiceUtil {
 	public static org.lsug.quota.model.Quota addQuota(long classNameId,
 		long classPK, int quotaAlert, long quotaAssigned, long quotaUsed,
 		int quotaStatus)
-		throws com.liferay.portal.kernel.exception.SystemException,
-			org.lsug.quota.NoSuchQuotaException {
+		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService()
 				   .addQuota(classNameId, classPK, quotaAlert, quotaAssigned,
 			quotaUsed, quotaStatus);
@@ -285,16 +284,38 @@ public class QuotaLocalServiceUtil {
 		return getService().checkAlerts(groupId, userId);
 	}
 
+	public static org.lsug.quota.model.Quota getCompanyQuota(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getCompanyQuota(groupId);
+	}
+
+	public static org.lsug.quota.model.Quota getGroupQuota(long groupId) {
+		return getService().getGroupQuota(groupId);
+	}
+
 	public static org.lsug.quota.model.Quota getQuotaByClassNameIdClassPK(
 		long classNameId, long classPK)
-		throws com.liferay.portal.kernel.exception.SystemException,
-			org.lsug.quota.NoSuchQuotaException {
+		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().getQuotaByClassNameIdClassPK(classNameId, classPK);
 	}
 
 	public static long getDLFileEntryTotalSize(long dlFileEntryId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().getDLFileEntryTotalSize(dlFileEntryId);
+	}
+
+	public static java.util.List<org.lsug.quota.model.Quota> getSitesQuotas(
+		long companyId, int start, int end) {
+		return getService().getSitesQuotas(companyId, start, end);
+	}
+
+	public static java.util.List<org.lsug.quota.model.Quota> getSitesQuotas(
+		long companyId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .getSitesQuotas(companyId, start, end, orderByComparator);
 	}
 
 	public static boolean hasQuota(long groupId, long userId, long size)

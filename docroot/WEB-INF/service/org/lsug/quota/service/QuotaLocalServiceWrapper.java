@@ -262,8 +262,7 @@ public class QuotaLocalServiceWrapper implements QuotaLocalService,
 
 	public org.lsug.quota.model.Quota addQuota(long classNameId, long classPK,
 		int quotaAlert, long quotaAssigned, long quotaUsed, int quotaStatus)
-		throws com.liferay.portal.kernel.exception.SystemException,
-			org.lsug.quota.NoSuchQuotaException {
+		throws com.liferay.portal.kernel.exception.SystemException {
 		return _quotaLocalService.addQuota(classNameId, classPK, quotaAlert,
 			quotaAssigned, quotaUsed, quotaStatus);
 	}
@@ -274,10 +273,18 @@ public class QuotaLocalServiceWrapper implements QuotaLocalService,
 		return _quotaLocalService.checkAlerts(groupId, userId);
 	}
 
+	public org.lsug.quota.model.Quota getCompanyQuota(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _quotaLocalService.getCompanyQuota(groupId);
+	}
+
+	public org.lsug.quota.model.Quota getGroupQuota(long groupId) {
+		return _quotaLocalService.getGroupQuota(groupId);
+	}
+
 	public org.lsug.quota.model.Quota getQuotaByClassNameIdClassPK(
 		long classNameId, long classPK)
-		throws com.liferay.portal.kernel.exception.SystemException,
-			org.lsug.quota.NoSuchQuotaException {
+		throws com.liferay.portal.kernel.exception.SystemException {
 		return _quotaLocalService.getQuotaByClassNameIdClassPK(classNameId,
 			classPK);
 	}
@@ -285,6 +292,20 @@ public class QuotaLocalServiceWrapper implements QuotaLocalService,
 	public long getDLFileEntryTotalSize(long dlFileEntryId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _quotaLocalService.getDLFileEntryTotalSize(dlFileEntryId);
+	}
+
+	public java.util.List<org.lsug.quota.model.Quota> getSitesQuotas(
+		long companyId, int start, int end) {
+		return _quotaLocalService.getSitesQuotas(companyId, start, end);
+	}
+
+	public java.util.List<org.lsug.quota.model.Quota> getSitesQuotas(
+		long companyId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _quotaLocalService.getSitesQuotas(companyId, start, end,
+			orderByComparator);
 	}
 
 	public boolean hasQuota(long groupId, long userId, long size)
