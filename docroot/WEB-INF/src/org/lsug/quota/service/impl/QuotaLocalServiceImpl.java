@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 
+import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
@@ -34,6 +35,8 @@ import org.lsug.quota.model.QuotaStatus;
 import org.lsug.quota.service.QuotaLocalServiceUtil;
 import org.lsug.quota.service.base.QuotaLocalServiceBaseImpl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -75,12 +78,35 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 
 		final Group group = GroupLocalServiceUtil.getGroup(groupId);
 
-		Quota groupQuota = getQuotaByClassNameIdClassPK(
-				PortalUtil.getClassNameId(Group.class), groupId);
-		Quota companyQuota = getQuotaByClassNameIdClassPK(
-				PortalUtil.getClassNameId(Company.class),group.getCompanyId());
+		Quota groupQuota = getGroupQuota(groupId);
+		Quota companyQuota = getCompanyQuota(groupId);
 
 		return groupQuota.isExceeded() || companyQuota.isExceeded();
+	}
+
+	public Quota getCompanyQuota(long groupId) throws SystemException {
+		Quota quota = null;
+
+		try {
+			quota = getQuotaByClassNameIdClassPK(
+					PortalUtil.getClassNameId(Company.class), groupId);
+		} catch (SystemException e) {
+			e.printStackTrace();
+		}
+		return quota;
+	}
+
+	public Quota getGroupQuota(long groupId)  {
+		Quota quota = null;
+
+		try {
+			quota = getQuotaByClassNameIdClassPK(
+					PortalUtil.getClassNameId(Group.class), groupId);
+		} catch (SystemException e) {
+			e.printStackTrace();
+		}
+
+		return quota;
 	}
 
 	public Quota getQuotaByClassNameIdClassPK(
@@ -109,19 +135,68 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		return val;
 	}
 
+	public List<Quota> getSitesQuotas(long companyId,int start,int end) {
+		List<Quota> quotaList = new ArrayList<Quota>();
+
+		List<Group> groups =
+				null;
+		try {
+			groups = GroupLocalServiceUtil.getCompanyGroups(
+					companyId, 0, GroupLocalServiceUtil.getGroupsCount());
+		} catch (SystemException e) {
+		}
+		for (Group group : groups) {
+			if (group.isSite() && !group.isControlPanel()) {
+
+				quotaList.add(getGroupQuota(group.getGroupId()));
+			}
+		}
+
+		return quotaList.subList(start,end);
+	}
+
+	public List<Quota> getSitesQuotas(
+			long companyId, int start, int end, OrderByComparator orderByComparator)
+			throws PortalException, SystemException {
+
+		List<Quota> result = new ArrayList<Quota>();
+
+		List<Group> groups =
+				GroupLocalServiceUtil.getCompanyGroups(
+						companyId, 0, GroupLocalServiceUtil.getGroupsCount());
+
+		for (Group group : groups) {
+			if (group.isSite() && !group.isControlPanel()) {
+					result.add(getGroupQuota(group.getGroupId()));
+
+			}
+		}
+
+		Collections.sort(result, orderByComparator);
+
+		if (result.size() < start) {
+			return null;
+		}
+
+		if (result.size() < end) {
+			return result.subList(start, result.size());
+		}
+		else {
+			return result.subList(start, end);
+		}
+
+	}
+
 	public boolean hasQuota(long groupId, long userId, long size)
 			throws PortalException, SystemException {
 
 		final Group group = GroupLocalServiceUtil.getGroup(groupId);
 
-		Quota groupQuota = getQuotaByClassNameIdClassPK(
-				PortalUtil.getClassNameId(Group.class), groupId);
-		Quota companyQuota = getQuotaByClassNameIdClassPK(
-				PortalUtil.getClassNameId(Company.class), group.getCompanyId());
+		Quota groupQuota = getGroupQuota(groupId);
+		Quota companyQuota = getCompanyQuota(groupId);
 
 		return groupQuota.hasFreeMB(size) && companyQuota.hasFreeMB(size);
 	}
-
 
 	public void decreaseQuotaUsage(long groupId, long userId, long size)
 			throws PortalException, SystemException, NoSuchQuotaException,
@@ -130,12 +205,12 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		final Group group = GroupLocalServiceUtil.getGroup(groupId);
 
 		updateQuota(
-				PortalUtil.getClassNameId(Group.class),
-				group.getGroupId(), -size);
+			PortalUtil.getClassNameId(Group.class),
+			group.getGroupId(), -size);
 
 		updateQuota(
-				PortalUtil.getClassNameId(Company.class),
-				group.getCompanyId(), -size);
+			PortalUtil.getClassNameId(Company.class),
+			group.getCompanyId(), -size);
 	}
 
 	public void increaseQuotaUsage(long groupId, long userId, long size)

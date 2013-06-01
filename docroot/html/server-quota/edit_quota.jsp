@@ -1,5 +1,3 @@
-<%@page import="com.liferay.portal.kernel.bean.BeanParamUtil"%>
-<%@page import="com.liferay.portal.kernel.util.ParamUtil"%>
 <%
 /**
  * Copyright (c) 2013 Liferay Spain User Group All rights reserved.
@@ -19,20 +17,23 @@
 <%@ include file="/html/server-quota/init.jsp" %>
 
 <%
-Quota quota = (Quota) request.getAttribute( "quota" );
+	Quota quota = (Quota) request.getAttribute( "quota" );
 
-String backURL = ParamUtil.getString(request, "backURL");
+	String backURL = ParamUtil.getString(request, "backURL");
 
-long quotaId = BeanParamUtil.getLong(quota, request, "quotaId");
+	long quotaId = BeanParamUtil.getLong(quota, request, "quotaId");
 
-long classPK = BeanParamUtil.getLong(quota, request, "classPK");
+	long classPK = BeanParamUtil.getLong(quota, request, "classPK");
+
+	long assignedGB = quota.getQuotaAssigned() / (1024*1024*1024);
+
+	String quotaAssignedString = String.valueOf(assignedGB);
 %>
 
 <portlet:actionURL var="editQuotaURL" name="saveServerQuota" />
 
-<liferay-ui:header
-	backURL="<%= backURL %>"
-/>
+<liferay-ui:header title="Edit quota" backURL="<%= backURL %>"/>
+
 
 <%-- TODO: show error messages --%>
 <%-- <liferay-ui:error key="" message="" /> --%>
@@ -43,15 +44,13 @@ long classPK = BeanParamUtil.getLong(quota, request, "classPK");
 	<aui:input name="quotaId" type="hidden" value="<%= quotaId %>" />
 	<aui:input name="classPK" type="hidden" value="<%= classPK %>" />
 
-	<aui:model-context bean="<%= quota %>" model="<%= Quota.class %>" />
-
-	<aui:input name="quotaStatus" />
-	
 	<%-- TODO: add the "quotaAlertStatus" in the service --%>
 
-	<aui:input name="quotaAssigned" />
+	<aui:input name="quotaAssigned"  value="<%=quotaAssignedString%>" />
 
-	<aui:input name="quotaAlert" />
+	<aui:input name="quotaAlert" value="<%= quota.getQuotaAlert()%>" />
+
+	<aui:input name="quotaStatus" type="checkbox" value="<%= quota.getQuotaStatus() == QuotaStatus.ACTIVE %>" />
 
 	<aui:button-row>
 		<aui:button type="submit" />

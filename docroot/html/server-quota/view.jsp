@@ -1,4 +1,3 @@
-<%@page import="com.liferay.portal.kernel.util.Constants"%>
 <%
 /**
  * Copyright (c) 2013 Liferay Spain User Group All rights reserved.
@@ -15,59 +14,48 @@
  */
  %>
 
-<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui"%>
-
-<portlet:defineObjects />
+<%@ include file="/html/init.jsp"%>
 
 <c:if test="${not empty searchContainer}">
 	<liferay-ui:search-container searchContainer="${searchContainer}" delta="${paramDelta}" emptyResultsMessage="empty.message" iteratorURL="${portletURL}">
 	<liferay-ui:search-container-results results="${list}" total="${count}" />
 	<liferay-ui:search-container-row className="org.lsug.quota.server.util.ServerVO" 
 		escapedModel="<%= true %>" modelVar="serverVO">
-	 		
+
 	<liferay-ui:search-container-column-text name="name" value="${serverVO.nameInstance }" />
-	
-	<%-- TODO --%>
- 	<%--liferay-ui:search-container-column-text name="numUser" value="${serverVO.numUser }" /> --%>
- 	
- 	<liferay-ui:search-container-column-text name="quota-status" value="${serverVO.quota.quotaStatus }" />
- 	
- 	<liferay-ui:search-container-column-text name="quota-alert" value="${serverVO.quota.quotaAlert }" />
- 	
- 	<liferay-ui:search-container-column-text name="quota-assigned" value="${serverVO.quota.quotaAssigned }" />
- 	
- 	<liferay-ui:search-container-column-text name="quota-used" value="${serverVO.quota.quotaUsed }" />
-	
+
+	<liferay-ui:search-container-column-text name="numUsers" value="${serverVO.numUsers }" />
+	<liferay-ui:search-container-column-text name="quota-status" value="${serverVO.active }" />
+
+	<liferay-ui:search-container-column-text name="quota-alert" value="${serverVO.alert }" />
+
+	<liferay-ui:search-container-column-text name="quota-assigned" value="${serverVO.quotaAssigned}" />
+
+	<liferay-ui:search-container-column-text name="quota-used" value="${serverVO.quotaUsed}" />
+
+	<liferay-ui:search-container-column-text name="quota-used-percent" value="${serverVO.quotaUsedPercent}" />
+
 	<liferay-ui:search-container-column-text name="actions">
-      	
-      	<liferay-ui:icon-menu>
-      	
-      		<c:set var="cmd">
-      			<c:choose>
-      				<c:when test="${serverVO.quota.classPK eq 0 }"><%=Constants.ADD%></c:when>
-      				<c:otherwise><%=Constants.UPDATE%></c:otherwise>
-      			</c:choose>
-      		</c:set>
-      	
-      		<portlet:renderURL var="editServerURL">
-				<portlet:param name="<%=Constants.CMD%>" value="${cmd}"/>
+
+		<liferay-ui:icon-menu>
+			<portlet:renderURL var="editServerURL">
+				<portlet:param name="<%=Constants.CMD%>" value="<%=Constants.UPDATE%>"/>
 				<portlet:param name="backURL" value="/html/server-quota/view.jsp"/>
-				<portlet:param name="quotaId" value="${serverVO.quota.quotaId }"/>
-				<portlet:param name="classPK" value="${serverVO.quota.classPK }"/>
+				<portlet:param name="quotaId" value="${serverVO.quotaId }"/>
+				<portlet:param name="classPK" value="${serverVO.classPK }"/>
 			</portlet:renderURL>
-			
-      		<liferay-ui:icon
+
+			<liferay-ui:icon
 				image="edit"
 				url="${editServerURL}"
 			/>
-			
-      	</liferay-ui:icon-menu> 
-		
+
+		</liferay-ui:icon-menu>
+
 	</liferay-ui:search-container-column-text> 
-			   		
+
 	</liferay-ui:search-container-row>
 		 <liferay-ui:search-iterator searchContainer="${searchContainer}" paginate="<%= true %>"/>
 	</liferay-ui:search-container>
+
 </c:if>

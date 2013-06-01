@@ -1,3 +1,8 @@
+<%@ page import="org.lsug.quota.service.QuotaLocalServiceUtil" %>
+<%@ page import="com.liferay.portal.model.Company" %>
+<%@ page import="com.liferay.compat.portal.util.PortalUtil" %>
+<%@ page import="org.lsug.quota.util.comparator.QuotaUsedComparator" %>
+<%@ page import="org.lsug.quota.util.comparator.QuotaAssignedComparator" %>
 <%
 /**
  * Copyright (c) 2013 Liferay Spain User Group All rights reserved.
@@ -17,11 +22,27 @@
 <%@ include file="/html/sites-quota/init.jsp"%>
 
 <%
-String orderByCol = ParamUtil.getString(request, "orderByCol", "quotaUsed");
-String orderByType = ParamUtil.getString(request, "orderByType", "desc");
+	String orderByCol = ParamUtil.getString(request, "orderByCol", "quotaUsed");
+	String orderByType = ParamUtil.getString(request, "orderByType", "desc");
 
-Quota companyQuota = QuotaUtil.getCompanyQuota(companyId);
-OrderByComparator orderByComparator = QuotaUtil.getQuotaOrderByComparator(orderByCol, orderByType);
+
+	Quota companyQuota =
+	QuotaLocalServiceUtil.getQuotaByClassNameIdClassPK(PortalUtil.getClassNameId(Company.class),companyId);
+
+	boolean orderByAsc = false;
+
+	if (orderByType.equals("asc")) {
+		orderByAsc = true;
+	}
+
+	OrderByComparator orderByComparator = null;
+
+	if (orderByCol.equals("quotaUsed")) {
+		orderByComparator = new QuotaUsedComparator(orderByAsc);
+	}
+	else if (orderByCol.equals("quotaAssigned")) {
+		orderByComparator = new QuotaAssignedComparator(orderByAsc);
+	}
 %>
 
 <liferay-ui:message key="sites-quota-description" />
@@ -41,8 +62,8 @@ OrderByComparator orderByComparator = QuotaUtil.getQuotaOrderByComparator(orderB
 	<liferay-ui:search-container-results>
 
 		<%
-		results = QuotaUtil.getSitesQuotas(companyId, searchContainer.getStart(), searchContainer.getEnd(), orderByComparator);
-		total = QuotaUtil.getSitesQuotasCount(companyId);
+		results = QuotaLocalServiceUtil.getSitesQuotas(companyId, searchContainer.getStart(), searchContainer.getEnd(), orderByComparator);
+		total = results.size();
 		
 		pageContext.setAttribute("results", results);
 		pageContext.setAttribute("total", total);

@@ -62,27 +62,24 @@ public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet 
 		List<ServerVO> listServerVOs = new ArrayList<ServerVO>();
 		int listQuotasCount = 0;
 		try {
-			// TODO: Cambiar por count
-			listQuotasCount = QuotaLocalServiceUtil.getQuotas(
-					QueryUtil.ALL_POS, QueryUtil.ALL_POS).size();
+			listQuotasCount = QuotaLocalServiceUtil.getQuotasCount();
 
 			List<Company> listCompany = CompanyLocalServiceUtil.getCompanies();
 
 			listQuotasCount = listCompany.size();
 			ServerVO serverVO = null;
 			for (Company company : listCompany) {
-				try {
-					Quota quota = QuotaLocalServiceUtil
-							.getQuotaByClassNameIdClassPK(PortalUtil
-									.getClassNameId(Company.class.getName()),
-									company.getCompanyId());
-					serverVO = new ServerVO(quota);
-				} catch (NoSuchQuotaException e) {
-					serverVO = new ServerVO(company);
-				}
+				Quota quota = QuotaLocalServiceUtil
+					.getQuotaByClassNameIdClassPK(
+						PortalUtil.getClassNameId(Company.class.getName()),
+						company.getCompanyId());
+				serverVO = new ServerVO(quota,renderRequest.getLocale());
+
 				listServerVOs.add(serverVO);
 			}
 		} catch (SystemException e) {
+			// TODO: Exceptions control
+		} catch (PortalException e) {
 			// TODO: Exceptions control
 		}
 		renderRequest.setAttribute("searchContainer", searchContainer);
@@ -102,10 +99,8 @@ public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet 
 				quota = QuotaLocalServiceUtil.getQuota(ParamUtil.getLong(
 						renderRequest, "quotaId"));
 			} catch (PortalException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SystemException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -117,39 +112,25 @@ public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet 
 	}
 
 	public void saveServerQuota(final ActionRequest req,
-			final ActionResponse res) throws SystemException {
+			final ActionResponse res) throws SystemException, PortalException {
 
 		final String cmd = ParamUtil.getString(req, Constants.CMD,
 				StringPool.BLANK);
 
 		final long quotaId = ParamUtil.getLong(req, "quotaId");
-
 		final long classPK = ParamUtil.getLong(req, "classPK");
-
 		final int quotaStatus = ParamUtil.getInteger(req, "quotaStatus");
-
-		final long quotaAssigned = ParamUtil.getLong(req, "quotaAssigned");
-
+		final long quotaAssigned =
+				ParamUtil.getLong(req, "quotaAssigned")*1024*1024*1024;
 		final int quotaAlert = ParamUtil.getInteger(req, "quotaAlert");
 
-		final Quota quota = QuotaLocalServiceUtil.createQuota(0);
-
-		quota.setQuotaId(quotaId);
-		quota.setClassNameId(PortalUtil.getClassNameId(Company.class));
-		quota.setClassPK(classPK);
+		Quota quota = QuotaLocalServiceUtil.getQuota(quotaId);
 		quota.setQuotaStatus(quotaStatus);
 		quota.setQuotaAssigned(quotaAssigned);
 		quota.setQuotaAlert(quotaAlert);
 
-		// TODO: handle exceptions and remove the throws clause from method
 		// signature
-		if (cmd.equals(Constants.ADD)) {
-			final long newQuotaId = CounterLocalServiceUtil
-					.increment(Quota.class.getName());
-
-			quota.setQuotaId(newQuotaId);
-			QuotaLocalServiceUtil.addQuota(quota);
-		} else if (cmd.equals(Constants.UPDATE)) {
+		 if (cmd.equals(Constants.UPDATE)) {
 			QuotaLocalServiceUtil.updateQuota(quota);
 		} else {
 			SessionErrors.add(req, "quota-server-invalid-command");
