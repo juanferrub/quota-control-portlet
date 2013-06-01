@@ -14,11 +14,23 @@
 
 package org.lsug.quota.service.impl;
 
+import com.liferay.compat.portal.util.PortalUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 
+import com.liferay.portal.model.Company;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.service.CompanyLocalServiceUtil;
+import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.model.DLFileVersion;
+import com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil;
 import org.lsug.quota.NoSuchQuotaException;
+import org.lsug.quota.QuotaExceededException;
 import org.lsug.quota.model.Quota;
+import org.lsug.quota.service.QuotaLocalServiceUtil;
 import org.lsug.quota.service.base.QuotaLocalServiceBaseImpl;
+
+import java.util.List;
 
 /**
  * The implementation of the quota local service. <p> All custom service methods
@@ -53,6 +65,19 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		return quotaPersistence.update(quota, false);
 	}
 
+	public boolean checkAlerts(long groupId, long userId)
+			throws PortalException, SystemException {
+
+		final Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+		Quota groupQuota = getQuotaByClassNameIdClassPK(
+				PortalUtil.getClassNameId(Group.class), groupId);
+		Quota companyQuota = getQuotaByClassNameIdClassPK(
+				PortalUtil.getClassNameId(Company.class),group.getCompanyId());
+
+		return groupQuota.isExceeded() || companyQuota.isExceeded();
+	}
+
 	public Quota getQuotaByClassNameIdClassPK(
 		final long classNameId, final long classPK)
 		throws NoSuchQuotaException, SystemException {
@@ -61,9 +86,65 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 			classNameId, classPK);
 	}
 
+	public long getDLFileEntryTotalSize(long dlFileEntryId) throws SystemException {
+		long val = 0;
+		int status = 0;
+		//FIXME create a finder
+		List<DLFileVersion> dlFileVersionList = DLFileVersionLocalServiceUtil.getFileVersions(dlFileEntryId,status);
+		for(DLFileVersion dlFileVersion : dlFileVersionList) {
+			val +=  dlFileVersion.getSize();
+		}
+
+		return val;
+	}
+
+	public boolean hasQuota(long groupId, long userId, long size)
+			throws PortalException, SystemException {
+
+		final Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+		Quota groupQuota = getQuotaByClassNameIdClassPK(
+				PortalUtil.getClassNameId(Group.class), groupId);
+		Quota companyQuota = getQuotaByClassNameIdClassPK(
+				PortalUtil.getClassNameId(Company.class), group.getCompanyId());
+
+		return groupQuota.hasFreeMB(size) && companyQuota.hasFreeMB(size);
+	}
+
+
+	public void decreaseQuotaUsage(long groupId, long userId, long size)
+			throws PortalException, SystemException, NoSuchQuotaException,
+			QuotaExceededException {
+
+		final Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+		updateQuota(
+				PortalUtil.getClassNameId(Group.class),
+				group.getGroupId(), -size);
+
+		updateQuota(
+				PortalUtil.getClassNameId(Company.class),
+				group.getCompanyId(), -size);
+	}
+
+	public void increaseQuotaUsage(long groupId, long userId, long size)
+			throws PortalException, SystemException, NoSuchQuotaException,
+			QuotaExceededException {
+
+		final Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+		updateQuota(
+				PortalUtil.getClassNameId(Group.class),
+				group.getGroupId(), size);
+
+		updateQuota(
+				PortalUtil.getClassNameId(Company.class),
+				group.getCompanyId(), size);
+	}
+
 	public Quota updateQuota(
-		final long classNameId, final long classPK, final long fileSize)
-		throws NoSuchQuotaException, SystemException {
+			final long classNameId, final long classPK, final long fileSize)
+			throws NoSuchQuotaException, SystemException {
 
 		Quota quota = getQuotaByClassNameIdClassPK(classNameId, classPK);
 
@@ -73,9 +154,9 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 	}
 
 	public Quota updateQuota(
-		long quotaId, long classNameId, long classPK, int quotaAlert,
-		long quotaAssigned, long quotaUsed, int quotaStatus)
-		throws NoSuchQuotaException, SystemException {
+			long quotaId, long classNameId, long classPK, int quotaAlert,
+			long quotaAssigned, long quotaUsed, int quotaStatus)
+			throws NoSuchQuotaException, SystemException {
 
 		Quota quota = quotaPersistence.fetchByPrimaryKey(quotaId);
 
@@ -87,28 +168,6 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		quota.setQuotaStatus(quotaStatus);
 
 		return quotaPersistence.update(quota, false);
-	}
-
-	public Quota decrementQuota(
-		final long classNameId, final long classPK, final long fileSize)
-		throws NoSuchQuotaException, SystemException {
-
-		if (fileSize >= 0)
-			throw new IllegalArgumentException(
-				"Cannot increment a quota by a negative increment.");
-
-		return updateQuota(classNameId, classPK, -fileSize);
-	}
-
-	public Quota incrementQuota(
-		final long classNameId, final long classPK, final long fileSize)
-		throws NoSuchQuotaException, SystemException {
-
-		if (fileSize < 0)
-			throw new IllegalArgumentException(
-				"Cannot decrement a quota by a positive decrement");
-
-		return updateQuota(classNameId, classPK, fileSize);
 	}
 
 }
