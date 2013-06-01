@@ -38,9 +38,14 @@ public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet 
 		final String cmd = ParamUtil.getString(renderRequest, Constants.CMD,
 				StringPool.BLANK);
 
-		if (cmd.equals(Constants.ADD) || cmd.equals(Constants.UPDATE)) {
+		if (cmd.equals(Constants.UPDATE)) {
 			editQuota(renderRequest, renderResponse);
-		} else {
+		}
+		else if (cmd.equals(Constants.PREVIEW)) {
+			showHistory(renderRequest, renderResponse);
+		}
+		else {
+			System.out.println(cmd);
 			listServerQuotas(renderRequest, renderResponse);
 		}
 
@@ -92,23 +97,41 @@ public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet 
 			RenderResponse renderResponse) throws IOException, PortletException {
 		Quota quota = null;
 		final long quotaId = ParamUtil.getLong(renderRequest, "quotaId", 0);
-		if (quotaId == 0) {
-			quota = QuotaLocalServiceUtil.createQuota(0);
-		} else {
-			try {
-				quota = QuotaLocalServiceUtil.getQuota(ParamUtil.getLong(
-						renderRequest, "quotaId"));
-			} catch (PortalException e) {
-				e.printStackTrace();
-			} catch (SystemException e) {
-				e.printStackTrace();
-			}
+
+		try {
+			quota = QuotaLocalServiceUtil.getQuota(ParamUtil.getLong(
+					renderRequest, "quotaId"));
+		} catch (PortalException e) {
+			e.printStackTrace();
+		} catch (SystemException e) {
+			e.printStackTrace();
 		}
 
 		renderRequest.setAttribute("quota", quota);
 
 		include("/html/server-quota/edit_quota.jsp", renderRequest,
 				renderResponse);
+	}
+
+	private void showHistory(RenderRequest renderRequest,
+						   RenderResponse renderResponse) throws IOException, PortletException {
+		Quota quota = null;
+		final long quotaId = ParamUtil.getLong(renderRequest, "quotaId", 0);
+
+		try {
+			quota = QuotaLocalServiceUtil.getQuota(ParamUtil.getLong(
+					renderRequest, "quotaId"));
+		} catch (PortalException e) {
+			e.printStackTrace();
+		} catch (SystemException e) {
+			e.printStackTrace();
+		}
+
+		renderRequest.setAttribute("quota", quota);
+
+		include("/html/server-quota/history_server.jsp", renderRequest,
+				renderResponse);
+
 	}
 
 	public void saveServerQuota(final ActionRequest req,

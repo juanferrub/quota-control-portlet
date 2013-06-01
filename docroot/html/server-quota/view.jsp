@@ -16,6 +16,8 @@
 
 <%@ include file="/html/init.jsp"%>
 
+<portlet:renderURL  var="viewServerQuotas"/>
+
 <c:if test="${not empty searchContainer}">
 	<liferay-ui:search-container searchContainer="${searchContainer}" delta="${paramDelta}" emptyResultsMessage="empty.message" iteratorURL="${portletURL}">
 	<liferay-ui:search-container-results results="${list}" total="${count}" />
@@ -35,20 +37,25 @@
 
 	<liferay-ui:search-container-column-text name="quota-used-percent" value="${serverVO.quotaUsedPercent}" />
 
-	<liferay-ui:search-container-column-text name="actions">
+	<liferay-ui:search-container-column-text>
 
 		<liferay-ui:icon-menu>
 			<portlet:renderURL var="editServerURL">
 				<portlet:param name="<%=Constants.CMD%>" value="<%=Constants.UPDATE%>"/>
-				<portlet:param name="backURL" value="/html/server-quota/view.jsp"/>
+				<portlet:param name="backURL" value="${viewServerQuotas}"/>
 				<portlet:param name="quotaId" value="${serverVO.quotaId }"/>
 				<portlet:param name="classPK" value="${serverVO.classPK }"/>
 			</portlet:renderURL>
 
-			<liferay-ui:icon
-				image="edit"
-				url="${editServerURL}"
-			/>
+			<portlet:renderURL var="showServerHistoryURL">
+				<portlet:param name="<%=Constants.CMD%>" value="<%=Constants.PREVIEW%>"/>
+				<portlet:param name="backURL" value="${viewServerQuotas}"/>
+				<portlet:param name="quotaId" value="${serverVO.quotaId }"/>
+				<portlet:param name="classPK" value="${serverVO.classPK }"/>
+			</portlet:renderURL>
+
+			<liferay-ui:icon image="edit" url="${editServerURL}" />
+			<liferay-ui:icon image="history" url="${showServerHistoryURL}" />
 
 		</liferay-ui:icon-menu>
 
