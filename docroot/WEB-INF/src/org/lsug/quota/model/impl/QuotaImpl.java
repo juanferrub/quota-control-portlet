@@ -14,6 +14,8 @@
 
 package org.lsug.quota.model.impl;
 
+import org.lsug.quota.model.QuotaStatus;
+
 /**
  * The extended model implementation for the Quota service. Represents a row in the &quot;LSUGQUOTA_Quota&quot; database table, with each column mapped to a property of this class.
  *
@@ -33,7 +35,8 @@ public class QuotaImpl extends QuotaBaseImpl {
 	}
 	
 	public boolean hasFreeMB(long mb) {
-		return this.getQuotaAssigned() - this.getQuotaUsed() >= mb;
+		return getQuotaStatus() == QuotaStatus.INACTIVE ||
+			this.getQuotaAssigned() - this.getQuotaUsed() >= mb;
 	}
 	
 	public boolean isExceeded() {

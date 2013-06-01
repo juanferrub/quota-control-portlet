@@ -15,6 +15,9 @@
 package org.lsug.quota.service.impl;
 
 import com.liferay.compat.portal.util.PortalUtil;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 
@@ -27,9 +30,11 @@ import com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil
 import org.lsug.quota.NoSuchQuotaException;
 import org.lsug.quota.QuotaExceededException;
 import org.lsug.quota.model.Quota;
+import org.lsug.quota.model.QuotaStatus;
 import org.lsug.quota.service.QuotaLocalServiceUtil;
 import org.lsug.quota.service.base.QuotaLocalServiceBaseImpl;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,7 +55,7 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 	public Quota addQuota(
 			long classNameId, long classPK, int quotaAlert, long quotaAssigned,
 			long quotaUsed, int quotaStatus)
-		throws NoSuchQuotaException, SystemException {
+		throws SystemException {
 
 		long quotaId = counterLocalService.increment(Quota.class.getName());
 		Quota quota = quotaPersistence.create(quotaId);
@@ -62,7 +67,7 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		quota.setQuotaUsed(quotaUsed);
 		quota.setQuotaStatus(quotaStatus);
 
-		return quotaPersistence.update(quota, false);
+		return addQuota(quota);
 	}
 
 	public boolean checkAlerts(long groupId, long userId)
@@ -80,13 +85,19 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 
 	public Quota getQuotaByClassNameIdClassPK(
 		final long classNameId, final long classPK)
-		throws NoSuchQuotaException, SystemException {
+		throws SystemException {
 
-		return getQuotaPersistence().findByClassNameIdClassPK(
-			classNameId, classPK);
+		try {
+			return getQuotaPersistence().findByClassNameIdClassPK(
+				classNameId, classPK);
+		} catch (NoSuchQuotaException e) {
+			long quotaUsed = getInitialDiskUsage(classNameId,classPK);
+			return addQuota(classNameId,classPK,0,0,quotaUsed,0);
+		}
 	}
 
-	public long getDLFileEntryTotalSize(long dlFileEntryId) throws SystemException {
+	public long getDLFileEntryTotalSize(long dlFileEntryId)
+			throws SystemException {
 		long val = 0;
 		int status = 0;
 		//FIXME create a finder
@@ -165,9 +176,34 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		quota.setQuotaAlert(quotaAlert);
 		quota.setQuotaAssigned(quotaAssigned);
 		quota.setQuotaUsed(quotaUsed);
-		quota.setQuotaStatus(quotaStatus);
+		quota.setQuotaStatus(QuotaStatus.INACTIVE);
 
 		return quotaPersistence.update(quota, false);
+	}
+
+	private long getInitialDiskUsage(long classNameId,long classPk) throws SystemException {
+		long size = 0;
+
+		String filter;
+		if (PortalUtil.getClassNameId(Company.class) == classNameId) {
+			filter = "companyId";
+		}
+		else {
+			filter = "groupId";
+		}
+		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
+				DLFileVersion.class);
+		dynamicQuery.add(
+			PropertyFactoryUtil.forName(filter).eq(classPk));
+
+		List<DLFileVersion> dlFileVersionList =
+			DLFileVersionLocalServiceUtil.dynamicQuery(dynamicQuery);
+
+		for(DLFileVersion dlFileVersion : dlFileVersionList) {
+			size += dlFileVersion.getSize();
+		}
+
+		return size;
 	}
 
 }
