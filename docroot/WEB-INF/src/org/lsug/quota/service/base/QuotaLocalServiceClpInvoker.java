@@ -112,27 +112,39 @@ public class QuotaLocalServiceClpInvoker {
 				"long", "long", "int", "long", "long", "int"
 			};
 
-		_methodName45 = "getQuotaByClassNameIdClassPK";
+		_methodName45 = "checkAlerts";
 
 		_methodParameterTypes45 = new String[] { "long", "long" };
 
-		_methodName46 = "updateQuota";
+		_methodName46 = "getQuotaByClassNameIdClassPK";
 
-		_methodParameterTypes46 = new String[] { "long", "long", "long" };
+		_methodParameterTypes46 = new String[] { "long", "long" };
 
-		_methodName47 = "updateQuota";
+		_methodName47 = "getDLFileEntryTotalSize";
 
-		_methodParameterTypes47 = new String[] {
-				"long", "long", "long", "int", "long", "long", "int"
-			};
+		_methodParameterTypes47 = new String[] { "long" };
 
-		_methodName48 = "decrementQuota";
+		_methodName48 = "hasQuota";
 
 		_methodParameterTypes48 = new String[] { "long", "long", "long" };
 
-		_methodName49 = "incrementQuota";
+		_methodName49 = "decreaseQuotaUsage";
 
 		_methodParameterTypes49 = new String[] { "long", "long", "long" };
+
+		_methodName50 = "increaseQuotaUsage";
+
+		_methodParameterTypes50 = new String[] { "long", "long", "long" };
+
+		_methodName51 = "updateQuota";
+
+		_methodParameterTypes51 = new String[] { "long", "long", "long" };
+
+		_methodName52 = "updateQuota";
+
+		_methodParameterTypes52 = new String[] {
+				"long", "long", "long", "int", "long", "long", "int"
+			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -246,19 +258,51 @@ public class QuotaLocalServiceClpInvoker {
 
 		if (_methodName45.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes45, parameterTypes)) {
-			return QuotaLocalServiceUtil.getQuotaByClassNameIdClassPK(((Long)arguments[0]).longValue(),
+			return QuotaLocalServiceUtil.checkAlerts(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue());
 		}
 
 		if (_methodName46.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes46, parameterTypes)) {
+			return QuotaLocalServiceUtil.getQuotaByClassNameIdClassPK(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
+		}
+
+		if (_methodName47.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes47, parameterTypes)) {
+			return QuotaLocalServiceUtil.getDLFileEntryTotalSize(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName48.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes48, parameterTypes)) {
+			return QuotaLocalServiceUtil.hasQuota(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue(),
+				((Long)arguments[2]).longValue());
+		}
+
+		if (_methodName49.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes49, parameterTypes)) {
+			QuotaLocalServiceUtil.decreaseQuotaUsage(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue(),
+				((Long)arguments[2]).longValue());
+		}
+
+		if (_methodName50.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes50, parameterTypes)) {
+			QuotaLocalServiceUtil.increaseQuotaUsage(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue(),
+				((Long)arguments[2]).longValue());
+		}
+
+		if (_methodName51.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes51, parameterTypes)) {
 			return QuotaLocalServiceUtil.updateQuota(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue(),
 				((Long)arguments[2]).longValue());
 		}
 
-		if (_methodName47.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes47, parameterTypes)) {
+		if (_methodName52.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes52, parameterTypes)) {
 			return QuotaLocalServiceUtil.updateQuota(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue(),
 				((Long)arguments[2]).longValue(),
@@ -266,20 +310,6 @@ public class QuotaLocalServiceClpInvoker {
 				((Long)arguments[4]).longValue(),
 				((Long)arguments[5]).longValue(),
 				((Integer)arguments[6]).intValue());
-		}
-
-		if (_methodName48.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes48, parameterTypes)) {
-			return QuotaLocalServiceUtil.decrementQuota(((Long)arguments[0]).longValue(),
-				((Long)arguments[1]).longValue(),
-				((Long)arguments[2]).longValue());
-		}
-
-		if (_methodName49.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes49, parameterTypes)) {
-			return QuotaLocalServiceUtil.incrementQuota(((Long)arguments[0]).longValue(),
-				((Long)arguments[1]).longValue(),
-				((Long)arguments[2]).longValue());
 		}
 
 		throw new UnsupportedOperationException();
@@ -333,4 +363,10 @@ public class QuotaLocalServiceClpInvoker {
 	private String[] _methodParameterTypes48;
 	private String _methodName49;
 	private String[] _methodParameterTypes49;
+	private String _methodName50;
+	private String[] _methodParameterTypes50;
+	private String _methodName51;
+	private String[] _methodParameterTypes51;
+	private String _methodName52;
+	private String[] _methodParameterTypes52;
 }

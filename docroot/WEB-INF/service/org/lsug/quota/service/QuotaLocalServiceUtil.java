@@ -279,11 +279,44 @@ public class QuotaLocalServiceUtil {
 			quotaUsed, quotaStatus);
 	}
 
+	public static boolean checkAlerts(long groupId, long userId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().checkAlerts(groupId, userId);
+	}
+
 	public static org.lsug.quota.model.Quota getQuotaByClassNameIdClassPK(
 		long classNameId, long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException,
 			org.lsug.quota.NoSuchQuotaException {
 		return getService().getQuotaByClassNameIdClassPK(classNameId, classPK);
+	}
+
+	public static long getDLFileEntryTotalSize(long dlFileEntryId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getDLFileEntryTotalSize(dlFileEntryId);
+	}
+
+	public static boolean hasQuota(long groupId, long userId, long size)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().hasQuota(groupId, userId, size);
+	}
+
+	public static void decreaseQuotaUsage(long groupId, long userId, long size)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException,
+			org.lsug.quota.NoSuchQuotaException,
+			org.lsug.quota.QuotaExceededException {
+		getService().decreaseQuotaUsage(groupId, userId, size);
+	}
+
+	public static void increaseQuotaUsage(long groupId, long userId, long size)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException,
+			org.lsug.quota.NoSuchQuotaException,
+			org.lsug.quota.QuotaExceededException {
+		getService().increaseQuotaUsage(groupId, userId, size);
 	}
 
 	public static org.lsug.quota.model.Quota updateQuota(long classNameId,
@@ -301,20 +334,6 @@ public class QuotaLocalServiceUtil {
 		return getService()
 				   .updateQuota(quotaId, classNameId, classPK, quotaAlert,
 			quotaAssigned, quotaUsed, quotaStatus);
-	}
-
-	public static org.lsug.quota.model.Quota decrementQuota(long classNameId,
-		long classPK, long fileSize)
-		throws com.liferay.portal.kernel.exception.SystemException,
-			org.lsug.quota.NoSuchQuotaException {
-		return getService().decrementQuota(classNameId, classPK, fileSize);
-	}
-
-	public static org.lsug.quota.model.Quota incrementQuota(long classNameId,
-		long classPK, long fileSize)
-		throws com.liferay.portal.kernel.exception.SystemException,
-			org.lsug.quota.NoSuchQuotaException {
-		return getService().incrementQuota(classNameId, classPK, fileSize);
 	}
 
 	public static void clearService() {

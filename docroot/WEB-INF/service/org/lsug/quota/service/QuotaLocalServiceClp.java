@@ -112,27 +112,39 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 				"long", "long", "int", "long", "long", "int"
 			};
 
-		_methodName20 = "getQuotaByClassNameIdClassPK";
+		_methodName20 = "checkAlerts";
 
 		_methodParameterTypes20 = new String[] { "long", "long" };
 
-		_methodName21 = "updateQuota";
+		_methodName21 = "getQuotaByClassNameIdClassPK";
 
-		_methodParameterTypes21 = new String[] { "long", "long", "long" };
+		_methodParameterTypes21 = new String[] { "long", "long" };
 
-		_methodName22 = "updateQuota";
+		_methodName22 = "getDLFileEntryTotalSize";
 
-		_methodParameterTypes22 = new String[] {
-				"long", "long", "long", "int", "long", "long", "int"
-			};
+		_methodParameterTypes22 = new String[] { "long" };
 
-		_methodName23 = "decrementQuota";
+		_methodName23 = "hasQuota";
 
 		_methodParameterTypes23 = new String[] { "long", "long", "long" };
 
-		_methodName24 = "incrementQuota";
+		_methodName24 = "decreaseQuotaUsage";
 
 		_methodParameterTypes24 = new String[] { "long", "long", "long" };
+
+		_methodName25 = "increaseQuotaUsage";
+
+		_methodParameterTypes25 = new String[] { "long", "long", "long" };
+
+		_methodName26 = "updateQuota";
+
+		_methodParameterTypes26 = new String[] { "long", "long", "long" };
+
+		_methodName27 = "updateQuota";
+
+		_methodParameterTypes27 = new String[] {
+				"long", "long", "long", "int", "long", "long", "int"
+			};
 	}
 
 	public org.lsug.quota.model.Quota addQuota(org.lsug.quota.model.Quota quota)
@@ -701,6 +713,38 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 		return (org.lsug.quota.model.Quota)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public boolean checkAlerts(long groupId, long userId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName20,
+					_methodParameterTypes20, new Object[] { groupId, userId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Boolean)returnObj).booleanValue();
+	}
+
 	public org.lsug.quota.model.Quota getQuotaByClassNameIdClassPK(
 		long classNameId, long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException,
@@ -708,8 +752,8 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName20,
-					_methodParameterTypes20,
+			returnObj = _invokableLocalService.invokeMethod(_methodName21,
+					_methodParameterTypes21,
 					new Object[] { classNameId, classPK });
 		}
 		catch (Throwable t) {
@@ -735,6 +779,142 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 		return (org.lsug.quota.model.Quota)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public long getDLFileEntryTotalSize(long dlFileEntryId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName22,
+					_methodParameterTypes22, new Object[] { dlFileEntryId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Long)returnObj).longValue();
+	}
+
+	public boolean hasQuota(long groupId, long userId, long size)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName23,
+					_methodParameterTypes23,
+					new Object[] { groupId, userId, size });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Boolean)returnObj).booleanValue();
+	}
+
+	public void decreaseQuotaUsage(long groupId, long userId, long size)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException,
+			org.lsug.quota.NoSuchQuotaException,
+			org.lsug.quota.QuotaExceededException {
+		try {
+			_invokableLocalService.invokeMethod(_methodName24,
+				_methodParameterTypes24, new Object[] { groupId, userId, size });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof org.lsug.quota.NoSuchQuotaException) {
+				throw (org.lsug.quota.NoSuchQuotaException)t;
+			}
+
+			if (t instanceof org.lsug.quota.QuotaExceededException) {
+				throw (org.lsug.quota.QuotaExceededException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
+	public void increaseQuotaUsage(long groupId, long userId, long size)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException,
+			org.lsug.quota.NoSuchQuotaException,
+			org.lsug.quota.QuotaExceededException {
+		try {
+			_invokableLocalService.invokeMethod(_methodName25,
+				_methodParameterTypes25, new Object[] { groupId, userId, size });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof org.lsug.quota.NoSuchQuotaException) {
+				throw (org.lsug.quota.NoSuchQuotaException)t;
+			}
+
+			if (t instanceof org.lsug.quota.QuotaExceededException) {
+				throw (org.lsug.quota.QuotaExceededException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
 	public org.lsug.quota.model.Quota updateQuota(long classNameId,
 		long classPK, long fileSize)
 		throws com.liferay.portal.kernel.exception.SystemException,
@@ -742,8 +922,8 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName21,
-					_methodParameterTypes21,
+			returnObj = _invokableLocalService.invokeMethod(_methodName26,
+					_methodParameterTypes26,
 					new Object[] { classNameId, classPK, fileSize });
 		}
 		catch (Throwable t) {
@@ -777,8 +957,8 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName22,
-					_methodParameterTypes22,
+			returnObj = _invokableLocalService.invokeMethod(_methodName27,
+					_methodParameterTypes27,
 					new Object[] {
 						quotaId,
 						
@@ -794,74 +974,6 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 						
 					quotaStatus
 					});
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof org.lsug.quota.NoSuchQuotaException) {
-				throw (org.lsug.quota.NoSuchQuotaException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (org.lsug.quota.model.Quota)ClpSerializer.translateOutput(returnObj);
-	}
-
-	public org.lsug.quota.model.Quota decrementQuota(long classNameId,
-		long classPK, long fileSize)
-		throws com.liferay.portal.kernel.exception.SystemException,
-			org.lsug.quota.NoSuchQuotaException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName23,
-					_methodParameterTypes23,
-					new Object[] { classNameId, classPK, fileSize });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof org.lsug.quota.NoSuchQuotaException) {
-				throw (org.lsug.quota.NoSuchQuotaException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (org.lsug.quota.model.Quota)ClpSerializer.translateOutput(returnObj);
-	}
-
-	public org.lsug.quota.model.Quota incrementQuota(long classNameId,
-		long classPK, long fileSize)
-		throws com.liferay.portal.kernel.exception.SystemException,
-			org.lsug.quota.NoSuchQuotaException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName24,
-					_methodParameterTypes24,
-					new Object[] { classNameId, classPK, fileSize });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -935,4 +1047,10 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 	private String[] _methodParameterTypes23;
 	private String _methodName24;
 	private String[] _methodParameterTypes24;
+	private String _methodName25;
+	private String[] _methodParameterTypes25;
+	private String _methodName26;
+	private String[] _methodParameterTypes26;
+	private String _methodName27;
+	private String[] _methodParameterTypes27;
 }
