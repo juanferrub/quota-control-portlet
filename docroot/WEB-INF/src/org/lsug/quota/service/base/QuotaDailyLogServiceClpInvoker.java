@@ -14,15 +14,15 @@
 
 package org.lsug.quota.service.base;
 
-import org.lsug.quota.service.QuotaServiceUtil;
+import org.lsug.quota.service.QuotaDailyLogServiceUtil;
 
 import java.util.Arrays;
 
 /**
  * @author Brian Wing Shun Chan
  */
-public class QuotaServiceClpInvoker {
-	public QuotaServiceClpInvoker() {
+public class QuotaDailyLogServiceClpInvoker {
+	public QuotaDailyLogServiceClpInvoker() {
 		_methodName28 = "getBeanIdentifier";
 
 		_methodParameterTypes28 = new String[] {  };
@@ -36,12 +36,12 @@ public class QuotaServiceClpInvoker {
 		Object[] arguments) throws Throwable {
 		if (_methodName28.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes28, parameterTypes)) {
-			return QuotaServiceUtil.getBeanIdentifier();
+			return QuotaDailyLogServiceUtil.getBeanIdentifier();
 		}
 
 		if (_methodName29.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes29, parameterTypes)) {
-			QuotaServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+			QuotaDailyLogServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 		}
 
 		throw new UnsupportedOperationException();

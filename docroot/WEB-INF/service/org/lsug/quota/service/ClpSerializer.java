@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.BaseModel;
 
 import org.lsug.quota.model.QuotaClp;
+import org.lsug.quota.model.QuotaDailyLogClp;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -106,6 +107,10 @@ public class ClpSerializer {
 			return translateInputQuota(oldModel);
 		}
 
+		if (oldModelClassName.equals(QuotaDailyLogClp.class.getName())) {
+			return translateInputQuotaDailyLog(oldModel);
+		}
+
 		return oldModel;
 	}
 
@@ -131,6 +136,16 @@ public class ClpSerializer {
 		return newModel;
 	}
 
+	public static Object translateInputQuotaDailyLog(BaseModel<?> oldModel) {
+		QuotaDailyLogClp oldClpModel = (QuotaDailyLogClp)oldModel;
+
+		BaseModel<?> newModel = oldClpModel.getQuotaDailyLogRemoteModel();
+
+		newModel.setModelAttributes(oldClpModel.getModelAttributes());
+
+		return newModel;
+	}
+
 	public static Object translateInput(Object obj) {
 		if (obj instanceof BaseModel<?>) {
 			return translateInput((BaseModel<?>)obj);
@@ -150,6 +165,11 @@ public class ClpSerializer {
 
 		if (oldModelClassName.equals("org.lsug.quota.model.impl.QuotaImpl")) {
 			return translateOutputQuota(oldModel);
+		}
+
+		if (oldModelClassName.equals(
+					"org.lsug.quota.model.impl.QuotaDailyLogImpl")) {
+			return translateOutputQuotaDailyLog(oldModel);
 		}
 
 		return oldModel;
@@ -240,6 +260,10 @@ public class ClpSerializer {
 			return new org.lsug.quota.NoSuchQuotaException();
 		}
 
+		if (className.equals("org.lsug.quota.NoSuchQuotaDailyLogException")) {
+			return new org.lsug.quota.NoSuchQuotaDailyLogException();
+		}
+
 		return throwable;
 	}
 
@@ -249,6 +273,16 @@ public class ClpSerializer {
 		newModel.setModelAttributes(oldModel.getModelAttributes());
 
 		newModel.setQuotaRemoteModel(oldModel);
+
+		return newModel;
+	}
+
+	public static Object translateOutputQuotaDailyLog(BaseModel<?> oldModel) {
+		QuotaDailyLogClp newModel = new QuotaDailyLogClp();
+
+		newModel.setModelAttributes(oldModel.getModelAttributes());
+
+		newModel.setQuotaDailyLogRemoteModel(oldModel);
 
 		return newModel;
 	}

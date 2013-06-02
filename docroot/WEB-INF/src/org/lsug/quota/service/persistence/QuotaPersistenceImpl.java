@@ -886,6 +886,8 @@ public class QuotaPersistenceImpl extends BasePersistenceImpl<Quota>
 
 	@BeanReference(type = QuotaPersistence.class)
 	protected QuotaPersistence quotaPersistence;
+	@BeanReference(type = QuotaDailyLogPersistence.class)
+	protected QuotaDailyLogPersistence quotaDailyLogPersistence;
 	@BeanReference(type = ResourcePersistence.class)
 	protected ResourcePersistence resourcePersistence;
 	@BeanReference(type = UserPersistence.class)

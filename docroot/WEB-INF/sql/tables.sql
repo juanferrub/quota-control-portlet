@@ -7,3 +7,12 @@ create table LSUGQUOTA_Quota (
 	quotaStatus INTEGER,
 	quotaAlert INTEGER
 );
+
+create table LSUGQUOTA_QuotaDailyLog (
+	quotaDailyLogId LONG not null primary key,
+	dayAnalyzed DATE null,
+	quotaId LONG,
+	quotaAssigned LONG,
+	quotaUsed LONG,
+	quotaStatus INTEGER
+);
