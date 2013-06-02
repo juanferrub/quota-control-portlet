@@ -5,6 +5,15 @@
 	<portlet>
 		<portlet-name>server-quota-portlet</portlet-name>
 		<icon>/html/server-quota/icon.png</icon>
+		<scheduler-entry>
+			<scheduler-description>This scheduler is used to run my own job</scheduler-description>
+			<scheduler-event-listener-class>org.lsug.quota.server.util.DailyLogJob</scheduler-event-listener-class>
+			<trigger>
+				<cron>
+					<cron-trigger-value>0 0 * * * ?</cron-trigger-value>
+				</cron>
+			</trigger>
+		</scheduler-entry>
 		<control-panel-entry-category>server</control-panel-entry-category>
 		<control-panel-entry-weight>2.5</control-panel-entry-weight>
 		<instanceable>false</instanceable>
