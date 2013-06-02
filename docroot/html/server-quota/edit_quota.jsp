@@ -25,7 +25,10 @@
 
 	long classPK = BeanParamUtil.getLong(quota, request, "classPK");
 
-	long assignedGB = quota.getQuotaAssigned() / (1024*1024*1024);
+	BigDecimal bdAssignedGB =
+		new BigDecimal((double)quota.getQuotaAssigned()/ (1024*1024*1024));
+
+	double assignedGB = bdAssignedGB.setScale(3,BigDecimal.ROUND_UP).doubleValue();
 
 	String quotaAssignedString = String.valueOf(assignedGB);
 %>

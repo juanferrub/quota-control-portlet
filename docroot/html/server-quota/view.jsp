@@ -14,7 +14,7 @@
  */
  %>
 
-<%@ include file="/html/init.jsp"%>
+<%@ include file="/html/server-quota/init.jsp"%>
 
 <portlet:renderURL  var="viewServerQuotas"/>
 
@@ -29,13 +29,13 @@
 	<liferay-ui:search-container-column-text name="numUsers" value="${serverVO.numUsers }" />
 	<liferay-ui:search-container-column-text name="quota-status" value="${serverVO.active }" />
 
-	<liferay-ui:search-container-column-text name="quota-alert" value="${serverVO.alert }" />
+	<liferay-ui:search-container-column-text name="quota-alert" value="${serverVO.alarm }" />
 
-	<liferay-ui:search-container-column-text name="quota-assigned" value="${serverVO.quotaAssigned}" />
+	<liferay-ui:search-container-column-text name="quota-assigned" value="${serverVO.assigned}" />
 
-	<liferay-ui:search-container-column-text name="quota-used" value="${serverVO.quotaUsed}" />
+	<liferay-ui:search-container-column-text name="quota-used" value="${serverVO.used}" />
 
-	<liferay-ui:search-container-column-text name="quota-used-percent" value="${serverVO.quotaUsedPercent}" />
+	<liferay-ui:search-container-column-text name="quota-used-percent" value="${serverVO.usedPercent}" />
 
 	<liferay-ui:search-container-column-text>
 
@@ -44,14 +44,12 @@
 				<portlet:param name="<%=Constants.CMD%>" value="<%=Constants.UPDATE%>"/>
 				<portlet:param name="backURL" value="${viewServerQuotas}"/>
 				<portlet:param name="quotaId" value="${serverVO.quotaId }"/>
-				<portlet:param name="classPK" value="${serverVO.classPK }"/>
 			</portlet:renderURL>
 
 			<portlet:renderURL var="showServerHistoryURL">
 				<portlet:param name="<%=Constants.CMD%>" value="<%=Constants.PREVIEW%>"/>
 				<portlet:param name="backURL" value="${viewServerQuotas}"/>
 				<portlet:param name="quotaId" value="${serverVO.quotaId }"/>
-				<portlet:param name="classPK" value="${serverVO.classPK }"/>
 			</portlet:renderURL>
 
 			<liferay-ui:icon image="edit" url="${editServerURL}" />

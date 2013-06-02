@@ -53,6 +53,10 @@
 		-->
 		<column name="quotaStatus" type="int"/>
 
+		<finder return-type="Collection" name="QuotaId">
+			<finder-column name="quotaId"/>
+		</finder>
+
 		<finder return-type="QuotaDailyLog" name="QuotaIdDayAnalyzed">
 			<finder-column name="quotaId"/>
 			<finder-column name="dayAnalyzed"/>

@@ -1,8 +1,12 @@
 package org.lsug.quota.server.portlet;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -11,9 +15,18 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.DateFormatFactory;
 import org.lsug.quota.NoSuchQuotaException;
 import org.lsug.quota.model.Quota;
+import org.lsug.quota.model.QuotaDailyLog;
+import org.lsug.quota.server.util.QuotaDailyLogVO;
 import org.lsug.quota.server.util.ServerVO;
+import org.lsug.quota.service.QuotaDailyLogLocalServiceUtil;
 import org.lsug.quota.service.QuotaLocalServiceUtil;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
@@ -28,6 +41,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
+import org.lsug.quota.util.QuotaUtil;
 
 public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet {
 
@@ -83,9 +97,9 @@ public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet 
 				listServerVOs.add(serverVO);
 			}
 		} catch (SystemException e) {
-			// TODO: Exceptions control
+			_log.error(e);// TODO: Exceptions control
 		} catch (PortalException e) {
-			// TODO: Exceptions control
+			_log.error(e);// TODO: Exceptions control
 		}
 		renderRequest.setAttribute("searchContainer", searchContainer);
 		renderRequest.setAttribute("list", listServerVOs);
@@ -100,11 +114,11 @@ public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet 
 
 		try {
 			quota = QuotaLocalServiceUtil.getQuota(ParamUtil.getLong(
-					renderRequest, "quotaId"));
+				renderRequest, "quotaId"));
 		} catch (PortalException e) {
-			e.printStackTrace();
+			_log.error(e);
 		} catch (SystemException e) {
-			e.printStackTrace();
+			_log.error(e);
 		}
 
 		renderRequest.setAttribute("quota", quota);
@@ -113,18 +127,52 @@ public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet 
 				renderResponse);
 	}
 
-	private void showHistory(RenderRequest renderRequest,
-						   RenderResponse renderResponse) throws IOException, PortletException {
+	private void showHistory(
+			RenderRequest renderRequest,RenderResponse renderResponse)
+		throws IOException, PortletException {
 		Quota quota = null;
+
 		final long quotaId = ParamUtil.getLong(renderRequest, "quotaId", 0);
 
 		try {
-			quota = QuotaLocalServiceUtil.getQuota(ParamUtil.getLong(
-					renderRequest, "quotaId"));
+			quota = QuotaLocalServiceUtil.getQuota(
+				ParamUtil.getLong(renderRequest, "quotaId"));
+
+			List<QuotaDailyLog> quotaDailyLogList =
+					new ArrayList<QuotaDailyLog>();
+			quotaDailyLogList.addAll(QuotaDailyLogLocalServiceUtil.
+				getQuotaDailyLogsByQuotaId(quotaId));
+
+			QuotaDailyLog quotaDailyLogToday =
+				QuotaDailyLogLocalServiceUtil.createQuotaDailyLog(0);
+
+			quotaDailyLogToday.setQuotaAssigned(quota.getQuotaAssigned());
+			quotaDailyLogToday.setQuotaStatus(quota.getQuotaStatus());
+			quotaDailyLogToday.setQuotaUsed(quota.getQuotaUsed());
+			quotaDailyLogToday.setDayAnalyzed(new Date());
+
+			quotaDailyLogList.add(quotaDailyLogToday);
+
+			JSONArray logsJSON = JSONFactoryUtil.createJSONArray();
+
+			List<QuotaDailyLogVO> quotaDailyLogVOList =
+				new ArrayList<QuotaDailyLogVO>();
+
+			Locale loc = renderRequest.getLocale();
+
+			for (QuotaDailyLog log : quotaDailyLogList) {
+				QuotaDailyLogVO quotaDailyLogVO = new QuotaDailyLogVO(log, loc);
+
+				quotaDailyLogVOList.add(quotaDailyLogVO);
+				logsJSON.put(getJSONObject(log, quotaDailyLogVO));
+			}
+
+			renderRequest.setAttribute("history",logsJSON);
+			renderRequest.setAttribute("list", quotaDailyLogVOList);
 		} catch (PortalException e) {
-			e.printStackTrace();
+			_log.error(e);
 		} catch (SystemException e) {
-			e.printStackTrace();
+			_log.error(e);
 		}
 
 		renderRequest.setAttribute("quota", quota);
@@ -143,8 +191,8 @@ public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet 
 		final long quotaId = ParamUtil.getLong(req, "quotaId");
 		final long classPK = ParamUtil.getLong(req, "classPK");
 		final int quotaStatus = ParamUtil.getInteger(req, "quotaStatus");
-		final long quotaAssigned =
-				ParamUtil.getLong(req, "quotaAssigned")*1024*1024*1024;
+		final long quotaAssigned  =
+			(long)(ParamUtil.getDouble(req, "quotaAssigned")*1024*1024*1024);
 		final int quotaAlert = ParamUtil.getInteger(req, "quotaAlert");
 
 		Quota quota = QuotaLocalServiceUtil.getQuota(quotaId);
@@ -152,12 +200,25 @@ public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet 
 		quota.setQuotaAssigned(quotaAssigned);
 		quota.setQuotaAlert(quotaAlert);
 
-		// signature
-		 if (cmd.equals(Constants.UPDATE)) {
+		if (cmd.equals(Constants.UPDATE)) {
 			QuotaLocalServiceUtil.updateQuota(quota);
-		} else {
+		}
+		else {
 			SessionErrors.add(req, "quota-server-invalid-command");
 		}
 
 	}
+
+	private JSONObject getJSONObject(QuotaDailyLog log, QuotaDailyLogVO quotaDailyLogVO) {
+		JSONObject logJSON = JSONFactoryUtil.createJSONObject();
+
+		logJSON.put("day", quotaDailyLogVO.getDate());
+		double percent = (double)log.getQuotaUsed()/log.getQuotaAssigned();
+		logJSON.put("perc", percent );
+		logJSON.put("usage",log.getQuotaUsed());
+		return logJSON;
+	}
+
+	private Log _log =
+		LogFactoryUtil.getLog(ServerQuotaPortlet.class.getName());
 }

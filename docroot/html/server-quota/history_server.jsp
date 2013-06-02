@@ -19,99 +19,24 @@
 <%
 	Quota quota = (Quota) request.getAttribute( "quota" );
 	String backURL = ParamUtil.getString(request, "backURL");
+	String history =  ParamUtil.getString(request, "history");
 %>
-
 
 <liferay-ui:header	title="server-quota-history" backURL="<%= backURL %>" />
 
 <%-- TODO: show error messages --%>
 <%-- <liferay-ui:error key="" message="" /> --%>
 
-
 <liferay-ui:tabs
    names="server-quota-history-graph,server-quota-history-log"
   refresh="<%= false %>">
 
 	<liferay-ui:section>
-
-		<div id="demoLineChart">
-		</div>
-
-		<script type="text/javascript" charset="utf-8">
-		AUI().ready(
-				'aui-chart',
-				'datatype',
-				'aui-delayed-task',
-				function(A) {
-
-					LineChart = {
-						expenses: [
-							{ month: 'Enero', perc: 0.00},
-							{ month: 'Febrero', perc: 23.14},
-							{ month: 'Marzo', perc: 80.00},
-							{ month: 'Abril', perc: 78.00},
-							{ month: 'Mayo', perc: 31.00}
-						],
-						series: [
-							{displayName: '%', yField: 'perc'}
-						],
-						formatCurrencyAxisLabel: function(value) {
-							return A.DataType.Number.format(
-									value,
-									{
-										suffix: ' %',
-										thousandsSeparator: ',',
-										decimalPlaces: 2
-									}
-							);
-						},
-
-						getDataTipText: function(item, index, series) {
-							var toolTipText = item.month;
-
-							toolTipText += '\n' + LineChart.formatCurrencyAxisLabel(item[series.yField]);
-
-							return toolTipText;
-						},
-						currencyAxis: (new A.Chart.NumericAxis())
-					};
-
-					LineChart.dataSource = new A.DataSource.Local({
-								source: LineChart.expenses
-							}
-					).plug(
-							{
-								fn: A.DataSourceJSONSchema,
-								cfg: {
-									resultFields: ['month', 'rent']
-								}
-							}
-					);
-
-					LineChart.currencyAxis.labelFunction = LineChart.formatCurrencyAxisLabel;
-
-					LineChart.chart = new A.LineChart(
-							{
-								dataSource: LineChart.dataSource,
-								series: LineChart.series,
-								xField: 'month',
-								yAxis: LineChart.currencyAxis,
-								width: '100%',
-								stacked:true,
-								height: 300,
-								dataTipFunction: LineChart.getDataTipText
-							}
-					).render('#demoLineChart');
-
-
-				}
-		);
-
-		</script>
+		<%@ include file="quota_graphs.jspf" %>
 	</liferay-ui:section>
 
 	<liferay-ui:section>
-		log table
+		<%@ include file="quota_logs.jspf" %>
 	</liferay-ui:section>
 
   </liferay-ui:tabs>
