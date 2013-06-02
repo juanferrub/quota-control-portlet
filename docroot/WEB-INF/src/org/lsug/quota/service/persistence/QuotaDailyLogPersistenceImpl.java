@@ -80,6 +80,26 @@ public class QuotaDailyLogPersistenceImpl extends BasePersistenceImpl<QuotaDaily
 		".List1";
 	public static final String FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION = FINDER_CLASS_NAME_ENTITY +
 		".List2";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_QUOTAID = new FinderPath(QuotaDailyLogModelImpl.ENTITY_CACHE_ENABLED,
+			QuotaDailyLogModelImpl.FINDER_CACHE_ENABLED,
+			QuotaDailyLogImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+			"findByQuotaId",
+			new String[] {
+				Long.class.getName(),
+				
+			"java.lang.Integer", "java.lang.Integer",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_QUOTAID =
+		new FinderPath(QuotaDailyLogModelImpl.ENTITY_CACHE_ENABLED,
+			QuotaDailyLogModelImpl.FINDER_CACHE_ENABLED,
+			QuotaDailyLogImpl.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"findByQuotaId", new String[] { Long.class.getName() },
+			QuotaDailyLogModelImpl.QUOTAID_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_QUOTAID = new FinderPath(QuotaDailyLogModelImpl.ENTITY_CACHE_ENABLED,
+			QuotaDailyLogModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByQuotaId",
+			new String[] { Long.class.getName() });
 	public static final FinderPath FINDER_PATH_FETCH_BY_QUOTAIDDAYANALYZED = new FinderPath(QuotaDailyLogModelImpl.ENTITY_CACHE_ENABLED,
 			QuotaDailyLogModelImpl.FINDER_CACHE_ENABLED,
 			QuotaDailyLogImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -327,6 +347,27 @@ public class QuotaDailyLogPersistenceImpl extends BasePersistenceImpl<QuotaDaily
 			FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 		}
 
+		else {
+			if ((quotaDailyLogModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_QUOTAID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(quotaDailyLogModelImpl.getOriginalQuotaId())
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_QUOTAID, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_QUOTAID,
+					args);
+
+				args = new Object[] {
+						Long.valueOf(quotaDailyLogModelImpl.getQuotaId())
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_QUOTAID, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_QUOTAID,
+					args);
+			}
+		}
+
 		EntityCacheUtil.putResult(QuotaDailyLogModelImpl.ENTITY_CACHE_ENABLED,
 			QuotaDailyLogImpl.class, quotaDailyLog.getPrimaryKey(),
 			quotaDailyLog);
@@ -484,6 +525,380 @@ public class QuotaDailyLogPersistenceImpl extends BasePersistenceImpl<QuotaDaily
 		}
 
 		return quotaDailyLog;
+	}
+
+	/**
+	 * Returns all the quota daily logs where quotaId = &#63;.
+	 *
+	 * @param quotaId the quota ID
+	 * @return the matching quota daily logs
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<QuotaDailyLog> findByQuotaId(long quotaId)
+		throws SystemException {
+		return findByQuotaId(quotaId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the quota daily logs where quotaId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param quotaId the quota ID
+	 * @param start the lower bound of the range of quota daily logs
+	 * @param end the upper bound of the range of quota daily logs (not inclusive)
+	 * @return the range of matching quota daily logs
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<QuotaDailyLog> findByQuotaId(long quotaId, int start, int end)
+		throws SystemException {
+		return findByQuotaId(quotaId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the quota daily logs where quotaId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param quotaId the quota ID
+	 * @param start the lower bound of the range of quota daily logs
+	 * @param end the upper bound of the range of quota daily logs (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching quota daily logs
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<QuotaDailyLog> findByQuotaId(long quotaId, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_QUOTAID;
+			finderArgs = new Object[] { quotaId };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_QUOTAID;
+			finderArgs = new Object[] { quotaId, start, end, orderByComparator };
+		}
+
+		List<QuotaDailyLog> list = (List<QuotaDailyLog>)FinderCacheUtil.getResult(finderPath,
+				finderArgs, this);
+
+		if ((list != null) && !list.isEmpty()) {
+			for (QuotaDailyLog quotaDailyLog : list) {
+				if ((quotaId != quotaDailyLog.getQuotaId())) {
+					list = null;
+
+					break;
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(3 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(2);
+			}
+
+			query.append(_SQL_SELECT_QUOTADAILYLOG_WHERE);
+
+			query.append(_FINDER_COLUMN_QUOTAID_QUOTAID_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(quotaId);
+
+				list = (List<QuotaDailyLog>)QueryUtil.list(q, getDialect(),
+						start, end);
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (list == null) {
+					FinderCacheUtil.removeResult(finderPath, finderArgs);
+				}
+				else {
+					cacheResult(list);
+
+					FinderCacheUtil.putResult(finderPath, finderArgs, list);
+				}
+
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first quota daily log in the ordered set where quotaId = &#63;.
+	 *
+	 * @param quotaId the quota ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching quota daily log
+	 * @throws org.lsug.quota.NoSuchQuotaDailyLogException if a matching quota daily log could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public QuotaDailyLog findByQuotaId_First(long quotaId,
+		OrderByComparator orderByComparator)
+		throws NoSuchQuotaDailyLogException, SystemException {
+		QuotaDailyLog quotaDailyLog = fetchByQuotaId_First(quotaId,
+				orderByComparator);
+
+		if (quotaDailyLog != null) {
+			return quotaDailyLog;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("quotaId=");
+		msg.append(quotaId);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchQuotaDailyLogException(msg.toString());
+	}
+
+	/**
+	 * Returns the first quota daily log in the ordered set where quotaId = &#63;.
+	 *
+	 * @param quotaId the quota ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching quota daily log, or <code>null</code> if a matching quota daily log could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public QuotaDailyLog fetchByQuotaId_First(long quotaId,
+		OrderByComparator orderByComparator) throws SystemException {
+		List<QuotaDailyLog> list = findByQuotaId(quotaId, 0, 1,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last quota daily log in the ordered set where quotaId = &#63;.
+	 *
+	 * @param quotaId the quota ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching quota daily log
+	 * @throws org.lsug.quota.NoSuchQuotaDailyLogException if a matching quota daily log could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public QuotaDailyLog findByQuotaId_Last(long quotaId,
+		OrderByComparator orderByComparator)
+		throws NoSuchQuotaDailyLogException, SystemException {
+		QuotaDailyLog quotaDailyLog = fetchByQuotaId_Last(quotaId,
+				orderByComparator);
+
+		if (quotaDailyLog != null) {
+			return quotaDailyLog;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("quotaId=");
+		msg.append(quotaId);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchQuotaDailyLogException(msg.toString());
+	}
+
+	/**
+	 * Returns the last quota daily log in the ordered set where quotaId = &#63;.
+	 *
+	 * @param quotaId the quota ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching quota daily log, or <code>null</code> if a matching quota daily log could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public QuotaDailyLog fetchByQuotaId_Last(long quotaId,
+		OrderByComparator orderByComparator) throws SystemException {
+		int count = countByQuotaId(quotaId);
+
+		List<QuotaDailyLog> list = findByQuotaId(quotaId, count - 1, count,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the quota daily logs before and after the current quota daily log in the ordered set where quotaId = &#63;.
+	 *
+	 * @param quotaDailyLogId the primary key of the current quota daily log
+	 * @param quotaId the quota ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next quota daily log
+	 * @throws org.lsug.quota.NoSuchQuotaDailyLogException if a quota daily log with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public QuotaDailyLog[] findByQuotaId_PrevAndNext(long quotaDailyLogId,
+		long quotaId, OrderByComparator orderByComparator)
+		throws NoSuchQuotaDailyLogException, SystemException {
+		QuotaDailyLog quotaDailyLog = findByPrimaryKey(quotaDailyLogId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			QuotaDailyLog[] array = new QuotaDailyLogImpl[3];
+
+			array[0] = getByQuotaId_PrevAndNext(session, quotaDailyLog,
+					quotaId, orderByComparator, true);
+
+			array[1] = quotaDailyLog;
+
+			array[2] = getByQuotaId_PrevAndNext(session, quotaDailyLog,
+					quotaId, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected QuotaDailyLog getByQuotaId_PrevAndNext(Session session,
+		QuotaDailyLog quotaDailyLog, long quotaId,
+		OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_QUOTADAILYLOG_WHERE);
+
+		query.append(_FINDER_COLUMN_QUOTAID_QUOTAID_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(quotaId);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(quotaDailyLog);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<QuotaDailyLog> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
@@ -760,6 +1175,18 @@ public class QuotaDailyLogPersistenceImpl extends BasePersistenceImpl<QuotaDaily
 	}
 
 	/**
+	 * Removes all the quota daily logs where quotaId = &#63; from the database.
+	 *
+	 * @param quotaId the quota ID
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByQuotaId(long quotaId) throws SystemException {
+		for (QuotaDailyLog quotaDailyLog : findByQuotaId(quotaId)) {
+			remove(quotaDailyLog);
+		}
+	}
+
+	/**
 	 * Removes the quota daily log where quotaId = &#63; and dayAnalyzed = &#63; from the database.
 	 *
 	 * @param quotaId the quota ID
@@ -784,6 +1211,59 @@ public class QuotaDailyLogPersistenceImpl extends BasePersistenceImpl<QuotaDaily
 		for (QuotaDailyLog quotaDailyLog : findAll()) {
 			remove(quotaDailyLog);
 		}
+	}
+
+	/**
+	 * Returns the number of quota daily logs where quotaId = &#63;.
+	 *
+	 * @param quotaId the quota ID
+	 * @return the number of matching quota daily logs
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByQuotaId(long quotaId) throws SystemException {
+		Object[] finderArgs = new Object[] { quotaId };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_QUOTAID,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_QUOTADAILYLOG_WHERE);
+
+			query.append(_FINDER_COLUMN_QUOTAID_QUOTAID_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(quotaId);
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_QUOTAID,
+					finderArgs, count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
 	}
 
 	/**
@@ -933,6 +1413,7 @@ public class QuotaDailyLogPersistenceImpl extends BasePersistenceImpl<QuotaDaily
 	private static final String _SQL_SELECT_QUOTADAILYLOG_WHERE = "SELECT quotaDailyLog FROM QuotaDailyLog quotaDailyLog WHERE ";
 	private static final String _SQL_COUNT_QUOTADAILYLOG = "SELECT COUNT(quotaDailyLog) FROM QuotaDailyLog quotaDailyLog";
 	private static final String _SQL_COUNT_QUOTADAILYLOG_WHERE = "SELECT COUNT(quotaDailyLog) FROM QuotaDailyLog quotaDailyLog WHERE ";
+	private static final String _FINDER_COLUMN_QUOTAID_QUOTAID_2 = "quotaDailyLog.quotaId = ?";
 	private static final String _FINDER_COLUMN_QUOTAIDDAYANALYZED_QUOTAID_2 = "quotaDailyLog.quotaId = ? AND ";
 	private static final String _FINDER_COLUMN_QUOTAIDDAYANALYZED_DAYANALYZED_1 = "quotaDailyLog.dayAnalyzed IS NULL";
 	private static final String _FINDER_COLUMN_QUOTAIDDAYANALYZED_DAYANALYZED_2 = "quotaDailyLog.dayAnalyzed = ?";

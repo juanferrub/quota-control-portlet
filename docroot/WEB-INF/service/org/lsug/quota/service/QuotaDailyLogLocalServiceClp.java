@@ -116,6 +116,10 @@ public class QuotaDailyLogLocalServiceClp implements QuotaDailyLogLocalService {
 		_methodName19 = "getQuotaLevelFromYesterday";
 
 		_methodParameterTypes19 = new String[] { "long", "java.util.Date" };
+
+		_methodName20 = "getQuotaDailyLogsByQuotaId";
+
+		_methodParameterTypes20 = new String[] { "long" };
 	}
 
 	public org.lsug.quota.model.QuotaDailyLog addQuotaDailyLog(
@@ -677,6 +681,34 @@ public class QuotaDailyLogLocalServiceClp implements QuotaDailyLogLocalService {
 		return (org.lsug.quota.model.QuotaDailyLog)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public java.util.List<org.lsug.quota.model.QuotaDailyLog> getQuotaDailyLogsByQuotaId(
+		long quotaId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName20,
+					_methodParameterTypes20, new Object[] { quotaId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<org.lsug.quota.model.QuotaDailyLog>)ClpSerializer.translateOutput(returnObj);
+	}
+
 	private InvokableLocalService _invokableLocalService;
 	private String _methodName0;
 	private String[] _methodParameterTypes0;
@@ -716,4 +748,6 @@ public class QuotaDailyLogLocalServiceClp implements QuotaDailyLogLocalService {
 	private String[] _methodParameterTypes17;
 	private String _methodName19;
 	private String[] _methodParameterTypes19;
+	private String _methodName20;
+	private String[] _methodParameterTypes20;
 }

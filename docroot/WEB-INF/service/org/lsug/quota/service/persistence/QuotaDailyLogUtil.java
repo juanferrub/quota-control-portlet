@@ -191,6 +191,144 @@ public class QuotaDailyLogUtil {
 	}
 
 	/**
+	* Returns all the quota daily logs where quotaId = &#63;.
+	*
+	* @param quotaId the quota ID
+	* @return the matching quota daily logs
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<org.lsug.quota.model.QuotaDailyLog> findByQuotaId(
+		long quotaId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByQuotaId(quotaId);
+	}
+
+	/**
+	* Returns a range of all the quota daily logs where quotaId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param quotaId the quota ID
+	* @param start the lower bound of the range of quota daily logs
+	* @param end the upper bound of the range of quota daily logs (not inclusive)
+	* @return the range of matching quota daily logs
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<org.lsug.quota.model.QuotaDailyLog> findByQuotaId(
+		long quotaId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByQuotaId(quotaId, start, end);
+	}
+
+	/**
+	* Returns an ordered range of all the quota daily logs where quotaId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param quotaId the quota ID
+	* @param start the lower bound of the range of quota daily logs
+	* @param end the upper bound of the range of quota daily logs (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching quota daily logs
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<org.lsug.quota.model.QuotaDailyLog> findByQuotaId(
+		long quotaId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .findByQuotaId(quotaId, start, end, orderByComparator);
+	}
+
+	/**
+	* Returns the first quota daily log in the ordered set where quotaId = &#63;.
+	*
+	* @param quotaId the quota ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching quota daily log
+	* @throws org.lsug.quota.NoSuchQuotaDailyLogException if a matching quota daily log could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static org.lsug.quota.model.QuotaDailyLog findByQuotaId_First(
+		long quotaId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			org.lsug.quota.NoSuchQuotaDailyLogException {
+		return getPersistence().findByQuotaId_First(quotaId, orderByComparator);
+	}
+
+	/**
+	* Returns the first quota daily log in the ordered set where quotaId = &#63;.
+	*
+	* @param quotaId the quota ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching quota daily log, or <code>null</code> if a matching quota daily log could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static org.lsug.quota.model.QuotaDailyLog fetchByQuotaId_First(
+		long quotaId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().fetchByQuotaId_First(quotaId, orderByComparator);
+	}
+
+	/**
+	* Returns the last quota daily log in the ordered set where quotaId = &#63;.
+	*
+	* @param quotaId the quota ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching quota daily log
+	* @throws org.lsug.quota.NoSuchQuotaDailyLogException if a matching quota daily log could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static org.lsug.quota.model.QuotaDailyLog findByQuotaId_Last(
+		long quotaId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			org.lsug.quota.NoSuchQuotaDailyLogException {
+		return getPersistence().findByQuotaId_Last(quotaId, orderByComparator);
+	}
+
+	/**
+	* Returns the last quota daily log in the ordered set where quotaId = &#63;.
+	*
+	* @param quotaId the quota ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching quota daily log, or <code>null</code> if a matching quota daily log could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static org.lsug.quota.model.QuotaDailyLog fetchByQuotaId_Last(
+		long quotaId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().fetchByQuotaId_Last(quotaId, orderByComparator);
+	}
+
+	/**
+	* Returns the quota daily logs before and after the current quota daily log in the ordered set where quotaId = &#63;.
+	*
+	* @param quotaDailyLogId the primary key of the current quota daily log
+	* @param quotaId the quota ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next quota daily log
+	* @throws org.lsug.quota.NoSuchQuotaDailyLogException if a quota daily log with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static org.lsug.quota.model.QuotaDailyLog[] findByQuotaId_PrevAndNext(
+		long quotaDailyLogId, long quotaId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			org.lsug.quota.NoSuchQuotaDailyLogException {
+		return getPersistence()
+				   .findByQuotaId_PrevAndNext(quotaDailyLogId, quotaId,
+			orderByComparator);
+	}
+
+	/**
 	* Returns the quota daily log where quotaId = &#63; and dayAnalyzed = &#63; or throws a {@link org.lsug.quota.NoSuchQuotaDailyLogException} if it could not be found.
 	*
 	* @param quotaId the quota ID
@@ -287,6 +425,17 @@ public class QuotaDailyLogUtil {
 	}
 
 	/**
+	* Removes all the quota daily logs where quotaId = &#63; from the database.
+	*
+	* @param quotaId the quota ID
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void removeByQuotaId(long quotaId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getPersistence().removeByQuotaId(quotaId);
+	}
+
+	/**
 	* Removes the quota daily log where quotaId = &#63; and dayAnalyzed = &#63; from the database.
 	*
 	* @param quotaId the quota ID
@@ -309,6 +458,18 @@ public class QuotaDailyLogUtil {
 	public static void removeAll()
 		throws com.liferay.portal.kernel.exception.SystemException {
 		getPersistence().removeAll();
+	}
+
+	/**
+	* Returns the number of quota daily logs where quotaId = &#63;.
+	*
+	* @param quotaId the quota ID
+	* @return the number of matching quota daily logs
+	* @throws SystemException if a system exception occurred
+	*/
+	public static int countByQuotaId(long quotaId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().countByQuotaId(quotaId);
 	}
 
 	/**

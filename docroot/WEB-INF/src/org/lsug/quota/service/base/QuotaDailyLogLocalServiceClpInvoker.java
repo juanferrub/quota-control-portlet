@@ -115,6 +115,10 @@ public class QuotaDailyLogLocalServiceClpInvoker {
 		_methodName50 = "getQuotaLevelFromYesterday";
 
 		_methodParameterTypes50 = new String[] { "long", "java.util.Date" };
+
+		_methodName51 = "getQuotaDailyLogsByQuotaId";
+
+		_methodParameterTypes51 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -222,6 +226,11 @@ public class QuotaDailyLogLocalServiceClpInvoker {
 				(java.util.Date)arguments[1]);
 		}
 
+		if (_methodName51.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes51, parameterTypes)) {
+			return QuotaDailyLogLocalServiceUtil.getQuotaDailyLogsByQuotaId(((Long)arguments[0]).longValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -263,4 +272,6 @@ public class QuotaDailyLogLocalServiceClpInvoker {
 	private String[] _methodParameterTypes45;
 	private String _methodName50;
 	private String[] _methodParameterTypes50;
+	private String _methodName51;
+	private String[] _methodParameterTypes51;
 }

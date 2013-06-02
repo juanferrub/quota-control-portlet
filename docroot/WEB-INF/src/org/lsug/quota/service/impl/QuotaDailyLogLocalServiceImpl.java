@@ -17,6 +17,7 @@ package org.lsug.quota.service.impl;
 import com.liferay.portal.kernel.exception.SystemException;
 
 import java.util.Date;
+import java.util.List;
 
 import org.lsug.quota.NoSuchQuotaDailyLogException;
 import org.lsug.quota.model.QuotaDailyLog;
@@ -55,4 +56,10 @@ public class QuotaDailyLogLocalServiceImpl
 
 		return quotaDailyLog;
 	}
+
+	public List<QuotaDailyLog> getQuotaDailyLogsByQuotaId(long quotaId)
+			throws SystemException {
+		return quotaDailyLogPersistence.findByQuotaId(quotaId);
+	}
+
 }

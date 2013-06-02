@@ -284,6 +284,12 @@ public class QuotaDailyLogLocalServiceUtil {
 		return getService().getQuotaLevelFromYesterday(quotaId, day);
 	}
 
+	public static java.util.List<org.lsug.quota.model.QuotaDailyLog> getQuotaDailyLogsByQuotaId(
+		long quotaId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getQuotaDailyLogsByQuotaId(quotaId);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

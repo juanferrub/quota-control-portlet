@@ -256,4 +256,9 @@ public interface QuotaDailyLogLocalService extends BaseLocalService,
 	public org.lsug.quota.model.QuotaDailyLog getQuotaLevelFromYesterday(
 		long quotaId, java.util.Date day)
 		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<org.lsug.quota.model.QuotaDailyLog> getQuotaDailyLogsByQuotaId(
+		long quotaId)
+		throws com.liferay.portal.kernel.exception.SystemException;
 }

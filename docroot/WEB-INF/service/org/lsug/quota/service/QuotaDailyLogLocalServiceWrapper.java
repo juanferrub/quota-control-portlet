@@ -282,6 +282,12 @@ public class QuotaDailyLogLocalServiceWrapper
 			day);
 	}
 
+	public java.util.List<org.lsug.quota.model.QuotaDailyLog> getQuotaDailyLogsByQuotaId(
+		long quotaId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _quotaDailyLogLocalService.getQuotaDailyLogsByQuotaId(quotaId);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */
