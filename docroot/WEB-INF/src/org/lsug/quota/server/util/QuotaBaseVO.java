@@ -19,6 +19,7 @@ import java.text.NumberFormat;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
 import org.lsug.quota.model.QuotaStatus;
+import org.lsug.quota.util.QuotaConstants;
 
 public class QuotaBaseVO  {
 
@@ -84,7 +85,7 @@ public class QuotaBaseVO  {
 	}
 
 	public void setAssigned(long assigned) {
-		_assigned = ((double)assigned / (1024 * 1024 * 1024));
+		_assigned = ((double)assigned / QuotaConstants.BYTES_TO_GB);
 	}
 
 	public void setLoc(Locale loc) {
@@ -96,7 +97,7 @@ public class QuotaBaseVO  {
 	}
 
 	public void setUsed(long used) {
-		_used = ((double)used / (1024 * 1024 * 1024));
+		_used = ((double)used / (QuotaConstants.BYTES_TO_GB));
 	}
 
 	private boolean _active;

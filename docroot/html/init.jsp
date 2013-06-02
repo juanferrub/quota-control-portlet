@@ -24,6 +24,7 @@
 <%@ page import="com.liferay.portal.kernel.util.OrderByComparator" %>
 <%@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
 <%@ page import="com.liferay.portal.service.GroupLocalServiceUtil" %>
+<%@ page import="org.lsug.quota.util.QuotaConstants" %>
 
 <%@ page import="org.lsug.quota.model.Quota" %>
 

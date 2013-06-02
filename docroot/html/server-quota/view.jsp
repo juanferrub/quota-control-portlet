@@ -26,16 +26,17 @@
 
 	<liferay-ui:search-container-column-text name="name" value="${serverVO.nameInstance }" />
 
-	<liferay-ui:search-container-column-text name="numUsers" value="${serverVO.numUsers }" />
-	<liferay-ui:search-container-column-text name="quota-status" value="${serverVO.active }" />
+	<liferay-ui:search-container-column-text name="server-quota.num-users" value="${serverVO.numUsers }" />
 
-	<liferay-ui:search-container-column-text name="quota-alert" value="${serverVO.alarm }" />
+	<liferay-ui:search-container-column-text name="server-quota.status" value="${serverVO.active }" />
 
-	<liferay-ui:search-container-column-text name="quota-assigned" value="${serverVO.assigned}" />
+	<liferay-ui:search-container-column-text name="server-quota.alarm-percent" value="${serverVO.alarm }" />
 
-	<liferay-ui:search-container-column-text name="quota-used" value="${serverVO.used}" />
+	<liferay-ui:search-container-column-text name="server-quota.assigned" value="${serverVO.assigned}" />
 
-	<liferay-ui:search-container-column-text name="quota-used-percent" value="${serverVO.usedPercent}" />
+	<liferay-ui:search-container-column-text name="server-quota.used" value="${serverVO.used}" />
+
+	<liferay-ui:search-container-column-text name="server-quota.percent" value="${serverVO.usedPercent}" />
 
 	<liferay-ui:search-container-column-text>
 

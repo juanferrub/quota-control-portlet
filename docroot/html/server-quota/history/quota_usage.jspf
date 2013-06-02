@@ -14,7 +14,7 @@
 	 */
 %>
 
-<div id="demoLineChart">
+<div id="usageChart">
 </div>
 
 <script type="text/javascript" charset="utf-8">
@@ -28,15 +28,14 @@
 					<%= history %>
 					,
 					series: [
-						{displayName: '%', yField: 'perc'}
+						{displayName: 'GB', yField: 'usage'}
 					],
 					formatCurrencyAxisLabel: function(value) {
 						return A.DataType.Number.format(
 								value,
 								{
-									suffix: ' %',
 									thousandsSeparator: ',',
-									decimalPlaces: 2
+									decimalPlaces: 4
 								}
 						);
 					},
@@ -44,7 +43,7 @@
 					getDataTipText: function(item, index, series) {
 						var toolTipText = item.day;
 
-						toolTipText += '\n' + LineChart.formatCurrencyAxisLabel(item[series.yField]);
+						toolTipText += '\n' + LineChart.formatCurrencyAxisLabel(item[series.yField])+ ' GB';
 
 						return toolTipText;
 					},
@@ -58,7 +57,7 @@
 						{
 							fn: A.DataSourceJSONSchema,
 							cfg: {
-								resultFields: ['day', 'rent']
+								resultFields: ['day', 'usage']
 							}
 						}
 				);
@@ -75,7 +74,7 @@
 							height: 300,
 							dataTipFunction: LineChart.getDataTipText
 						}
-				).render('#demoLineChart');
+				).render('#usageChart');
 			}
 	);
 

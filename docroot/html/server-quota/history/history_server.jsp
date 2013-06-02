@@ -19,22 +19,24 @@
 <%
 	Quota quota = (Quota) request.getAttribute( "quota" );
 	String backURL = ParamUtil.getString(request, "backURL");
-	String history =  ParamUtil.getString(request, "history");
+	String history =  (String) request.getAttribute( "history" ).toString();
 %>
 
-<liferay-ui:header	title="server-quota-history" backURL="<%= backURL %>" />
+<liferay-ui:header	title="server-quota.history.title" backURL="<%= backURL %>" />
 
 <%-- TODO: show error messages --%>
 <%-- <liferay-ui:error key="" message="" /> --%>
 
 <liferay-ui:tabs
-   names="server-quota-history-graph,server-quota-history-log"
+   names="server-quota.history.history-percent,server-quota.history.history-usage,server-quota.history.history-log"
   refresh="<%= false %>">
 
 	<liferay-ui:section>
-		<%@ include file="quota_graphs.jspf" %>
+		<%@ include file="quota_percent.jspf" %>
 	</liferay-ui:section>
-
+	<liferay-ui:section>
+		<%@ include file="quota_usage.jspf" %>
+	</liferay-ui:section>
 	<liferay-ui:section>
 		<%@ include file="quota_logs.jspf" %>
 	</liferay-ui:section>

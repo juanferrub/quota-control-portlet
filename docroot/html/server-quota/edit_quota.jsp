@@ -25,8 +25,7 @@
 
 	long classPK = BeanParamUtil.getLong(quota, request, "classPK");
 
-	BigDecimal bdAssignedGB =
-		new BigDecimal((double)quota.getQuotaAssigned()/ (1024*1024*1024));
+	BigDecimal bdAssignedGB = new BigDecimal((double)quota.getQuotaAssigned()/ (QuotaConstants.BYTES_TO_GB));
 
 	double assignedGB = bdAssignedGB.setScale(3,BigDecimal.ROUND_UP).doubleValue();
 
@@ -35,7 +34,7 @@
 
 <portlet:actionURL var="editQuotaURL" name="saveServerQuota" />
 
-<liferay-ui:header title="Edit quota" backURL="<%= backURL %>"/>
+<liferay-ui:header title="server-quota.edit.title" backURL="<%= backURL %>"/>
 
 
 <%-- TODO: show error messages --%>
@@ -49,11 +48,11 @@
 
 	<%-- TODO: add the "quotaAlertStatus" in the service --%>
 
-	<aui:input name="quotaAssigned"  value="<%=quotaAssignedString%>" />
+	<aui:input name="server-quota.edit.assigned"  value="<%=quotaAssignedString%>" />
 
-	<aui:input name="quotaAlert" value="<%= quota.getQuotaAlert()%>" />
+	<aui:input name="server-quota.edit.alert" value="<%= quota.getQuotaAlert()%>" />
 
-	<aui:input name="quotaStatus" type="checkbox" value="<%= quota.getQuotaStatus() == QuotaStatus.ACTIVE %>" />
+	<aui:input name="server-quota.edit.status" type="checkbox" value="<%= quota.getQuotaStatus() == QuotaStatus.ACTIVE %>" />
 
 	<aui:button-row>
 		<aui:button type="submit" />

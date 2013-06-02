@@ -177,7 +177,7 @@ public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet 
 
 		renderRequest.setAttribute("quota", quota);
 
-		include("/html/server-quota/history_server.jsp", renderRequest,
+		include("/html/server-quota/history/history_server.jsp", renderRequest,
 				renderResponse);
 
 	}
@@ -190,23 +190,17 @@ public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet 
 
 		final long quotaId = ParamUtil.getLong(req, "quotaId");
 		final long classPK = ParamUtil.getLong(req, "classPK");
-		final int quotaStatus = ParamUtil.getInteger(req, "quotaStatus");
+		final boolean quotaStatus = ParamUtil.getBoolean(req, "server-quota.edit.status");
 		final long quotaAssigned  =
-			(long)(ParamUtil.getDouble(req, "quotaAssigned")*1024*1024*1024);
-		final int quotaAlert = ParamUtil.getInteger(req, "quotaAlert");
+			(long)(ParamUtil.getDouble(req, "server-quota.edit.assigned")*1024*1024*1024);
+		final int quotaAlert = ParamUtil.getInteger(req, "server-quota.edit.alert");
 
 		Quota quota = QuotaLocalServiceUtil.getQuota(quotaId);
-		quota.setQuotaStatus(quotaStatus);
+		quota.setQuotaStatus(quotaStatus ? 1 : 0);
 		quota.setQuotaAssigned(quotaAssigned);
 		quota.setQuotaAlert(quotaAlert);
 
-		if (cmd.equals(Constants.UPDATE)) {
-			QuotaLocalServiceUtil.updateQuota(quota);
-		}
-		else {
-			SessionErrors.add(req, "quota-server-invalid-command");
-		}
-
+		QuotaLocalServiceUtil.updateQuota(quota);
 	}
 
 	private JSONObject getJSONObject(QuotaDailyLog log, QuotaDailyLogVO quotaDailyLogVO) {
@@ -215,7 +209,7 @@ public class ServerQuotaPortlet extends com.liferay.util.bridges.mvc.MVCPortlet 
 		logJSON.put("day", quotaDailyLogVO.getDate());
 		double percent = (double)log.getQuotaUsed()/log.getQuotaAssigned();
 		logJSON.put("perc", percent );
-		logJSON.put("usage",log.getQuotaUsed());
+		logJSON.put("usage",((double)log.getQuotaUsed()/(1024*1024*1024)));
 		return logJSON;
 	}
 
