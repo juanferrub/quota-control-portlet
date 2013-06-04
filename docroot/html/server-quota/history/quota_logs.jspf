@@ -21,11 +21,11 @@
 									 escapedModel="<%= true %>" modelVar="dailyLog">
 
 		<liferay-ui:search-container-column-text name="day" value="${dailyLog.date}" />
-		<liferay-ui:search-container-column-text name="quotaStatus" value="${dailyLog.active}" />
+		<liferay-ui:search-container-column-text name="server-quota.status" value="${dailyLog.active}" />
 
-		<liferay-ui:search-container-column-text name="quotaUsed" value="${dailyLog.used}" />
-		<liferay-ui:search-container-column-text name="quotaAssigned" value="${dailyLog.assigned }" />
-		<liferay-ui:search-container-column-text name="quota-used-percent" value="${dailyLog.usedPercent}" />
+		<liferay-ui:search-container-column-text name="server-quota.used" value="${dailyLog.used}" />
+		<liferay-ui:search-container-column-text name="server-quota.assigned" value="${dailyLog.assigned }" />
+		<liferay-ui:search-container-column-text name="server-quota.percent" value="${dailyLog.usedPercent}" />
 
 
 	</liferay-ui:search-container-row>
