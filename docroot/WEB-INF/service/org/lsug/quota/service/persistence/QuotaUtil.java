@@ -232,6 +232,149 @@ public class QuotaUtil {
 	}
 
 	/**
+	* Returns all the quotas where parentQuotaId = &#63;.
+	*
+	* @param parentQuotaId the parent quota ID
+	* @return the matching quotas
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<org.lsug.quota.model.Quota> findByParentQuotaId(
+		long parentQuotaId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByParentQuotaId(parentQuotaId);
+	}
+
+	/**
+	* Returns a range of all the quotas where parentQuotaId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param parentQuotaId the parent quota ID
+	* @param start the lower bound of the range of quotas
+	* @param end the upper bound of the range of quotas (not inclusive)
+	* @return the range of matching quotas
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<org.lsug.quota.model.Quota> findByParentQuotaId(
+		long parentQuotaId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByParentQuotaId(parentQuotaId, start, end);
+	}
+
+	/**
+	* Returns an ordered range of all the quotas where parentQuotaId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param parentQuotaId the parent quota ID
+	* @param start the lower bound of the range of quotas
+	* @param end the upper bound of the range of quotas (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching quotas
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<org.lsug.quota.model.Quota> findByParentQuotaId(
+		long parentQuotaId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .findByParentQuotaId(parentQuotaId, start, end,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the first quota in the ordered set where parentQuotaId = &#63;.
+	*
+	* @param parentQuotaId the parent quota ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching quota
+	* @throws org.lsug.quota.NoSuchQuotaException if a matching quota could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static org.lsug.quota.model.Quota findByParentQuotaId_First(
+		long parentQuotaId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			org.lsug.quota.NoSuchQuotaException {
+		return getPersistence()
+				   .findByParentQuotaId_First(parentQuotaId, orderByComparator);
+	}
+
+	/**
+	* Returns the first quota in the ordered set where parentQuotaId = &#63;.
+	*
+	* @param parentQuotaId the parent quota ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching quota, or <code>null</code> if a matching quota could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static org.lsug.quota.model.Quota fetchByParentQuotaId_First(
+		long parentQuotaId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .fetchByParentQuotaId_First(parentQuotaId, orderByComparator);
+	}
+
+	/**
+	* Returns the last quota in the ordered set where parentQuotaId = &#63;.
+	*
+	* @param parentQuotaId the parent quota ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching quota
+	* @throws org.lsug.quota.NoSuchQuotaException if a matching quota could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static org.lsug.quota.model.Quota findByParentQuotaId_Last(
+		long parentQuotaId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			org.lsug.quota.NoSuchQuotaException {
+		return getPersistence()
+				   .findByParentQuotaId_Last(parentQuotaId, orderByComparator);
+	}
+
+	/**
+	* Returns the last quota in the ordered set where parentQuotaId = &#63;.
+	*
+	* @param parentQuotaId the parent quota ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching quota, or <code>null</code> if a matching quota could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static org.lsug.quota.model.Quota fetchByParentQuotaId_Last(
+		long parentQuotaId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .fetchByParentQuotaId_Last(parentQuotaId, orderByComparator);
+	}
+
+	/**
+	* Returns the quotas before and after the current quota in the ordered set where parentQuotaId = &#63;.
+	*
+	* @param quotaId the primary key of the current quota
+	* @param parentQuotaId the parent quota ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next quota
+	* @throws org.lsug.quota.NoSuchQuotaException if a quota with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static org.lsug.quota.model.Quota[] findByParentQuotaId_PrevAndNext(
+		long quotaId, long parentQuotaId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			org.lsug.quota.NoSuchQuotaException {
+		return getPersistence()
+				   .findByParentQuotaId_PrevAndNext(quotaId, parentQuotaId,
+			orderByComparator);
+	}
+
+	/**
 	* Returns all the quotas.
 	*
 	* @return the quotas
@@ -296,6 +439,17 @@ public class QuotaUtil {
 	}
 
 	/**
+	* Removes all the quotas where parentQuotaId = &#63; from the database.
+	*
+	* @param parentQuotaId the parent quota ID
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void removeByParentQuotaId(long parentQuotaId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getPersistence().removeByParentQuotaId(parentQuotaId);
+	}
+
+	/**
 	* Removes all the quotas from the database.
 	*
 	* @throws SystemException if a system exception occurred
@@ -316,6 +470,18 @@ public class QuotaUtil {
 	public static int countByClassNameIdClassPK(long classNameId, long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getPersistence().countByClassNameIdClassPK(classNameId, classPK);
+	}
+
+	/**
+	* Returns the number of quotas where parentQuotaId = &#63;.
+	*
+	* @param parentQuotaId the parent quota ID
+	* @return the number of matching quotas
+	* @throws SystemException if a system exception occurred
+	*/
+	public static int countByParentQuotaId(long parentQuotaId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().countByParentQuotaId(parentQuotaId);
 	}
 
 	/**

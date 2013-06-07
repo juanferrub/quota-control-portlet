@@ -759,13 +759,13 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 		return ((Boolean)returnObj).booleanValue();
 	}
 
-	public org.lsug.quota.model.Quota getCompanyQuota(long groupId)
+	public org.lsug.quota.model.Quota getCompanyQuota(long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		try {
 			returnObj = _invokableLocalService.invokeMethod(_methodName21,
-					_methodParameterTypes21, new Object[] { groupId });
+					_methodParameterTypes21, new Object[] { companyId });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -865,7 +865,8 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 	}
 
 	public java.util.List<org.lsug.quota.model.Quota> getSitesQuotas(
-		long companyId, int start, int end) {
+		long companyId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		try {
@@ -875,6 +876,10 @@ public class QuotaLocalServiceClp implements QuotaLocalService {
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;

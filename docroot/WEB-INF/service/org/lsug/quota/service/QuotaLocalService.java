@@ -250,7 +250,7 @@ public interface QuotaLocalService extends BaseLocalService,
 			com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public org.lsug.quota.model.Quota getCompanyQuota(long groupId)
+	public org.lsug.quota.model.Quota getCompanyQuota(long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -267,7 +267,8 @@ public interface QuotaLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<org.lsug.quota.model.Quota> getSitesQuotas(
-		long companyId, int start, int end);
+		long companyId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<org.lsug.quota.model.Quota> getSitesQuotas(

@@ -70,6 +70,7 @@ public class QuotaClp extends BaseModelImpl<Quota> implements Quota {
 		attributes.put("quotaId", getQuotaId());
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("classPK", getClassPK());
+		attributes.put("parentQuotaId", getParentQuotaId());
 		attributes.put("quotaAssigned", getQuotaAssigned());
 		attributes.put("quotaUsed", getQuotaUsed());
 		attributes.put("quotaStatus", getQuotaStatus());
@@ -96,6 +97,12 @@ public class QuotaClp extends BaseModelImpl<Quota> implements Quota {
 
 		if (classPK != null) {
 			setClassPK(classPK);
+		}
+
+		Long parentQuotaId = (Long)attributes.get("parentQuotaId");
+
+		if (parentQuotaId != null) {
+			setParentQuotaId(parentQuotaId);
 		}
 
 		Long quotaAssigned = (Long)attributes.get("quotaAssigned");
@@ -163,6 +170,14 @@ public class QuotaClp extends BaseModelImpl<Quota> implements Quota {
 
 	public void setClassPK(long classPK) {
 		_classPK = classPK;
+	}
+
+	public long getParentQuotaId() {
+		return _parentQuotaId;
+	}
+
+	public void setParentQuotaId(long parentQuotaId) {
+		_parentQuotaId = parentQuotaId;
 	}
 
 	public long getQuotaAssigned() {
@@ -235,6 +250,7 @@ public class QuotaClp extends BaseModelImpl<Quota> implements Quota {
 		clone.setQuotaId(getQuotaId());
 		clone.setClassNameId(getClassNameId());
 		clone.setClassPK(getClassPK());
+		clone.setParentQuotaId(getParentQuotaId());
 		clone.setQuotaAssigned(getQuotaAssigned());
 		clone.setQuotaUsed(getQuotaUsed());
 		clone.setQuotaStatus(getQuotaStatus());
@@ -289,7 +305,7 @@ public class QuotaClp extends BaseModelImpl<Quota> implements Quota {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{quotaId=");
 		sb.append(getQuotaId());
@@ -297,6 +313,8 @@ public class QuotaClp extends BaseModelImpl<Quota> implements Quota {
 		sb.append(getClassNameId());
 		sb.append(", classPK=");
 		sb.append(getClassPK());
+		sb.append(", parentQuotaId=");
+		sb.append(getParentQuotaId());
 		sb.append(", quotaAssigned=");
 		sb.append(getQuotaAssigned());
 		sb.append(", quotaUsed=");
@@ -311,7 +329,7 @@ public class QuotaClp extends BaseModelImpl<Quota> implements Quota {
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(28);
 
 		sb.append("<model><model-name>");
 		sb.append("org.lsug.quota.model.Quota");
@@ -328,6 +346,10 @@ public class QuotaClp extends BaseModelImpl<Quota> implements Quota {
 		sb.append(
 			"<column><column-name>classPK</column-name><column-value><![CDATA[");
 		sb.append(getClassPK());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>parentQuotaId</column-name><column-value><![CDATA[");
+		sb.append(getParentQuotaId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>quotaAssigned</column-name><column-value><![CDATA[");
@@ -354,6 +376,7 @@ public class QuotaClp extends BaseModelImpl<Quota> implements Quota {
 	private long _quotaId;
 	private long _classNameId;
 	private long _classPK;
+	private long _parentQuotaId;
 	private long _quotaAssigned;
 	private long _quotaUsed;
 	private int _quotaStatus;

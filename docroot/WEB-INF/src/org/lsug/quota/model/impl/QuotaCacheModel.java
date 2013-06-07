@@ -31,7 +31,7 @@ import java.io.Serializable;
 public class QuotaCacheModel implements CacheModel<Quota>, Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{quotaId=");
 		sb.append(quotaId);
@@ -39,6 +39,8 @@ public class QuotaCacheModel implements CacheModel<Quota>, Serializable {
 		sb.append(classNameId);
 		sb.append(", classPK=");
 		sb.append(classPK);
+		sb.append(", parentQuotaId=");
+		sb.append(parentQuotaId);
 		sb.append(", quotaAssigned=");
 		sb.append(quotaAssigned);
 		sb.append(", quotaUsed=");
@@ -58,6 +60,7 @@ public class QuotaCacheModel implements CacheModel<Quota>, Serializable {
 		quotaImpl.setQuotaId(quotaId);
 		quotaImpl.setClassNameId(classNameId);
 		quotaImpl.setClassPK(classPK);
+		quotaImpl.setParentQuotaId(parentQuotaId);
 		quotaImpl.setQuotaAssigned(quotaAssigned);
 		quotaImpl.setQuotaUsed(quotaUsed);
 		quotaImpl.setQuotaStatus(quotaStatus);
@@ -71,6 +74,7 @@ public class QuotaCacheModel implements CacheModel<Quota>, Serializable {
 	public long quotaId;
 	public long classNameId;
 	public long classPK;
+	public long parentQuotaId;
 	public long quotaAssigned;
 	public long quotaUsed;
 	public int quotaStatus;

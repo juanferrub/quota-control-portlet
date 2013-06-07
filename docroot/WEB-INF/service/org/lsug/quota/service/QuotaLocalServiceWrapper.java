@@ -273,9 +273,9 @@ public class QuotaLocalServiceWrapper implements QuotaLocalService,
 		return _quotaLocalService.checkAlerts(groupId, userId);
 	}
 
-	public org.lsug.quota.model.Quota getCompanyQuota(long groupId)
+	public org.lsug.quota.model.Quota getCompanyQuota(long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return _quotaLocalService.getCompanyQuota(groupId);
+		return _quotaLocalService.getCompanyQuota(companyId);
 	}
 
 	public org.lsug.quota.model.Quota getGroupQuota(long groupId) {
@@ -295,7 +295,8 @@ public class QuotaLocalServiceWrapper implements QuotaLocalService,
 	}
 
 	public java.util.List<org.lsug.quota.model.Quota> getSitesQuotas(
-		long companyId, int start, int end) {
+		long companyId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
 		return _quotaLocalService.getSitesQuotas(companyId, start, end);
 	}
 

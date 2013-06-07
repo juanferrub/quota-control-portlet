@@ -12,6 +12,7 @@
 			<id name="quotaId" />
 			<basic name="classNameId" />
 			<basic name="classPK" />
+			<basic name="parentQuotaId" />
 			<basic name="quotaAssigned" />
 			<basic name="quotaUsed" />
 			<basic name="quotaStatus" />
