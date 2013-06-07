@@ -16,10 +16,3 @@
 
 <%@ include file="/html/init.jsp"%>
 
-<%@page import="com.liferay.portal.kernel.bean.BeanParamUtil"%>
-<%@page import="com.liferay.portal.kernel.util.ParamUtil"%>
-<%@ page import="org.lsug.quota.model.QuotaStatus" %>
-<%@ page import="java.text.DecimalFormat" %>
-<%@ page import="java.math.BigDecimal" %>
-<%@ page import="com.liferay.portal.kernel.dao.search.SearchContainer" %>
-<%@ page import="org.lsug.quota.model.QuotaDailyLog" %>

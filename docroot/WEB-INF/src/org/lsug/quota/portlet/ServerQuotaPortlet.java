@@ -14,55 +14,58 @@
 
 package org.lsug.quota.portlet;
 
+
 import javax.portlet.ActionRequest;
 import javax.portlet.RenderRequest;
+
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.model.Company;
+import com.liferay.portal.service.CompanyLocalServiceUtil;
+import com.liferay.portal.util.PortalUtil;
+import org.lsug.quota.model.Quota;
+import org.lsug.quota.server.util.QuotaBaseVO;
+import org.lsug.quota.server.util.ServerQuotaVO;
+import org.lsug.quota.service.QuotaLocalServiceUtil;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
-import org.lsug.quota.model.Quota;
-import org.lsug.quota.server.util.QuotaBaseVO;
-import org.lsug.quota.server.util.SiteQuotaVO;
-import org.lsug.quota.service.QuotaLocalServiceUtil;
 import org.lsug.quota.util.QuotaConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SitesQuotaPortlet extends QuotaBasePortlet {
-
-
-	@Override
-	protected List<QuotaBaseVO> getQuotas(RenderRequest req, int start, int end)
-			throws SystemException, PortalException {
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay) req.getAttribute(WebKeys.THEME_DISPLAY);
-
-		long companyId = themeDisplay.getCompanyId();
-
-		List<QuotaBaseVO> sitesQuotas =
-				new ArrayList<QuotaBaseVO>();
-
-		List<Quota> sitesQuotasList =
-			QuotaLocalServiceUtil.getSitesQuotas(companyId,-1,-1);
-
-		for (Quota quota : sitesQuotasList) {
-			sitesQuotas.add(new SiteQuotaVO(quota,req.getLocale()));
-		}
-
-		return sitesQuotas;
-	}
+public class ServerQuotaPortlet extends QuotaBasePortlet {
 
 	@Override
 	protected String getEditPage() {
-		return "/html/sites-quota/edit_quota.jsp";
+		return "/html/server-quota/edit_quota.jsp";
 	}
 
 	@Override
 	protected String getShowHistoryPage() {
-		return "/html/sites-quota/history/history_server.jsp";
+		return "/html/server-quota/history/history_server.jsp";
+	}
+
+	@Override
+	protected List<QuotaBaseVO> getQuotas(RenderRequest req, int start, int end)
+			throws SystemException, PortalException {
+
+		List<Company> listCompany = CompanyLocalServiceUtil.getCompanies();
+
+		List<QuotaBaseVO> serverQuotas =
+			new ArrayList<QuotaBaseVO>(listCompany.size());
+
+		for (Company c : listCompany) {
+			Quota quota = QuotaLocalServiceUtil
+					.getQuotaByClassNameIdClassPK(
+						PortalUtil.getClassNameId(Company.class.getName()),
+						c.getCompanyId());
+			serverQuotas.add(new ServerQuotaVO(quota,req.getLocale()));
+		}
+
+		return serverQuotas;
 	}
 
 	@Override
@@ -70,11 +73,11 @@ public class SitesQuotaPortlet extends QuotaBasePortlet {
 			throws SystemException, PortalException {
 		long quotaId = ParamUtil.getLong(req, "quotaId");
 		boolean quotaStatus =
-				ParamUtil.getBoolean(req, "sites-quota.edit.status");
+				ParamUtil.getBoolean(req, "server-quota.edit.status");
 		long quotaAssigned  =
-				(long)(ParamUtil.getDouble(req, "sites-quota.edit.assigned")
-				* QuotaConstants.BYTES_TO_GB);
-		int quotaAlert = ParamUtil.getInteger(req, "sites-quota.edit.alert");
+			(long)(ParamUtil.getDouble(req, "server-quota.edit.assigned")
+			* QuotaConstants.BYTES_TO_GB);
+		int quotaAlert = ParamUtil.getInteger(req, "server-quota.edit.alert");
 
 		Quota quota = QuotaLocalServiceUtil.getQuota(quotaId);
 
@@ -84,4 +87,7 @@ public class SitesQuotaPortlet extends QuotaBasePortlet {
 
 		return quota;
 	}
+
+	private Log _log =
+		LogFactoryUtil.getLog(ServerQuotaPortlet.class.getName());
 }

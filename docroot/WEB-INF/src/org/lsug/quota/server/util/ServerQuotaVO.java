@@ -23,13 +23,11 @@ import com.liferay.portal.service.CompanyLocalServiceUtil;
 
 import java.util.Locale;
 
-public class ServerVO extends QuotaBaseVO {
-
-
+public class ServerQuotaVO extends QuotaBaseVO {
 
 	private Locale locale;
 
-	public ServerVO(Quota q,Locale loc)
+	public ServerQuotaVO(Quota q, Locale loc)
 			throws SystemException, PortalException {
 
 		Company c = CompanyLocalServiceUtil.getCompany(q.getClassPK());
@@ -62,7 +60,4 @@ public class ServerVO extends QuotaBaseVO {
 
 	private String _nameInstance;
 	private int _numUsers;
-
-
-
 }

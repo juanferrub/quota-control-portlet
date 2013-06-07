@@ -30,11 +30,16 @@ import org.lsug.quota.model.QuotaDailyLog;
 import org.lsug.quota.service.QuotaDailyLogLocalServiceUtil;
 import org.lsug.quota.service.QuotaLocalServiceUtil;
 import org.lsug.quota.util.QuotaUtil;
+
+/**
+ * This job is launched every night to take snapshot of the quotas.
+ */
 public class DailyLogJob implements MessageListener {
 
 	@Override
 	public void receive(Message arg0) throws MessageListenerException {
 		List<Quota> quotaList = null;
+
 		try {
 			Date dayToAnalyze = QuotaUtil.removeTime(new Date());
 
@@ -49,7 +54,8 @@ public class DailyLogJob implements MessageListener {
 					analyzeQuota(q, dayToAnalyze);
 				}
 			}
-		} catch (SystemException e) {
+		}
+		catch (SystemException e) {
 			_log.error(e);
 		}
 	}
@@ -59,8 +65,9 @@ public class DailyLogJob implements MessageListener {
 			long quotaLogNextId = CounterLocalServiceUtil.increment(
 				QuotaDailyLog.class.getName());
 
-			QuotaDailyLog quotaLogForYesterday = QuotaDailyLogLocalServiceUtil.
-				createQuotaDailyLog(quotaLogNextId);
+			QuotaDailyLog quotaLogForYesterday =
+				QuotaDailyLogLocalServiceUtil.createQuotaDailyLog(
+					quotaLogNextId);
 			quotaLogForYesterday.setQuotaId(q.getQuotaId());
 			quotaLogForYesterday.setDayAnalyzed(dayToAnalyze);
 			quotaLogForYesterday.setQuotaAssigned(q.getQuotaAssigned());
@@ -69,7 +76,8 @@ public class DailyLogJob implements MessageListener {
 
 			QuotaDailyLogLocalServiceUtil.addQuotaDailyLog(
 				quotaLogForYesterday);
-		} catch (SystemException e) {
+		}
+		catch (SystemException e) {
 			_log.error(e);
 		}
 	}

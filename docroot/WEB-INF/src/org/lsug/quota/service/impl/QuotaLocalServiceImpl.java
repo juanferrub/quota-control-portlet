@@ -70,6 +70,19 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		quota.setQuotaUsed(quotaUsed);
 		quota.setQuotaStatus(quotaStatus);
 
+		if (classNameId == PortalUtil.getClassNameId(Company.class)) {
+			quota.setParentQuotaId(0);
+		}
+		else if (classNameId == PortalUtil.getClassNameId(Group.class)) {
+			try {
+				Group group = GroupLocalServiceUtil.getGroup(classPK);
+				Quota companyQuota = getCompanyQuota(group.getCompanyId());
+				quota.setParentQuotaId(companyQuota.getQuotaId());
+			}
+			catch (PortalException e) {
+			}
+		}
+
 		return addQuota(quota);
 	}
 
@@ -84,12 +97,12 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		return groupQuota.isExceeded() || companyQuota.isExceeded();
 	}
 
-	public Quota getCompanyQuota(long groupId) throws SystemException {
+	public Quota getCompanyQuota(long companyId) throws SystemException {
 		Quota quota = null;
 
 		try {
 			quota = getQuotaByClassNameIdClassPK(
-					PortalUtil.getClassNameId(Company.class), groupId);
+					PortalUtil.getClassNameId(Company.class), companyId);
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}
@@ -135,56 +148,27 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		return val;
 	}
 
-	public List<Quota> getSitesQuotas(long companyId,int start,int end) {
+	public List<Quota> getSitesQuotas(long companyId,int start,int end) throws SystemException {
 		List<Quota> quotaList = new ArrayList<Quota>();
 
-		List<Group> groups =
-				null;
-		try {
-			groups = GroupLocalServiceUtil.getCompanyGroups(
-					companyId, 0, GroupLocalServiceUtil.getGroupsCount());
-		} catch (SystemException e) {
-		}
-		for (Group group : groups) {
-			if (group.isSite() && !group.isControlPanel()) {
+		Quota companyQuota = getCompanyQuota(companyId);
+		List<Quota> result =
+				quotaPersistence.findByParentQuotaId(
+						companyQuota.getQuotaId(),start,end);
 
-				quotaList.add(getGroupQuota(group.getGroupId()));
-			}
-		}
-
-		return quotaList.subList(start,end);
+		return result;
 	}
 
 	public List<Quota> getSitesQuotas(
 			long companyId, int start, int end, OrderByComparator orderByComparator)
 			throws PortalException, SystemException {
 
-		List<Quota> result = new ArrayList<Quota>();
+		Quota companyQuota = getCompanyQuota(companyId);
+		List<Quota> result =
+			quotaPersistence.findByParentQuotaId(
+				companyQuota.getQuotaId(),start,end);
 
-		List<Group> groups =
-				GroupLocalServiceUtil.getCompanyGroups(
-						companyId, 0, GroupLocalServiceUtil.getGroupsCount());
-
-		for (Group group : groups) {
-			if (group.isSite() && !group.isControlPanel()) {
-					result.add(getGroupQuota(group.getGroupId()));
-
-			}
-		}
-
-		Collections.sort(result, orderByComparator);
-
-		if (result.size() < start) {
-			return null;
-		}
-
-		if (result.size() < end) {
-			return result.subList(start, result.size());
-		}
-		else {
-			return result.subList(start, end);
-		}
-
+		return result;
 	}
 
 	public boolean hasQuota(long groupId, long userId, long size)

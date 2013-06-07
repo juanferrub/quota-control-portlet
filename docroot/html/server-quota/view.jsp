@@ -21,7 +21,7 @@
 <c:if test="${not empty searchContainer}">
 	<liferay-ui:search-container searchContainer="${searchContainer}" delta="${paramDelta}" emptyResultsMessage="empty.message" iteratorURL="${portletURL}">
 	<liferay-ui:search-container-results results="${list}" total="${count}" />
-	<liferay-ui:search-container-row className="org.lsug.quota.server.util.ServerVO" 
+	<liferay-ui:search-container-row className="org.lsug.quota.server.util.ServerQuotaVO"
 		escapedModel="<%= true %>" modelVar="serverVO">
 
 	<liferay-ui:search-container-column-text name="name" value="${serverVO.nameInstance }" />
