@@ -19,10 +19,10 @@
 <%
 	Quota quota = (Quota) request.getAttribute( "quota" );
 	String backURL = ParamUtil.getString(request, "backURL");
-	String history =  (String) request.getAttribute( "history" ).toString();
+	String history = (String) request.getAttribute( "history" ).toString();
 %>
 
-<liferay-ui:header	title="server-quota.history.title" backURL="<%= backURL %>" />
+<liferay-ui:header backURL="<%= backURL %>" title="server-quota.history.title" />
 
 <%-- TODO: show error messages --%>
 <%-- <liferay-ui:error key="" message="" /> --%>
@@ -42,4 +42,3 @@
 	</liferay-ui:section>
 
   </liferay-ui:tabs>
-

@@ -29,16 +29,16 @@
 	String quotaAssignedString = String.valueOf(assignedGB);
 %>
 
-<portlet:actionURL var="editQuotaURL" name="saveQuota" />
+<portlet:actionURL name="saveQuota" var="editQuotaURL" />
 
-<liferay-ui:header title="sites-quota.edit.title" backURL="<%= backURL %>"/>
+<liferay-ui:header backURL="<%= backURL %>" title="sites-quota.edit.title" />
 
 
 <%-- TODO: show error messages --%>
 <%-- <liferay-ui:error key="" message="" /> --%>
 
-<aui:form action="<%= editQuotaURL %>" method="post" name="fm" >
-	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= quotaId == 0 ? Constants.ADD : Constants.UPDATE %>"/>
+<aui:form action="<%= editQuotaURL %>" method="post" name="fm">
+	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= quotaId == 0 ? Constants.ADD : Constants.UPDATE %>" />
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 	<aui:input name="quotaId" type="hidden" value="<%= quotaId %>" />
 	<aui:input name="classPK" type="hidden" value="<%= classPK %>" />
@@ -47,7 +47,7 @@
 
 	<aui:input name="sites-quota.edit.assigned"  value="<%=quotaAssignedString%>" />
 
-	<aui:input name="sites-quota.edit.alert" value="<%= quota.getQuotaAlert()%>" />
+	<aui:input name="sites-quota.edit.alert" value="<%= quota.getQuotaAlert() %>" />
 
 	<aui:input name="sites-quota.edit.status" type="checkbox" value="<%= quota.getQuotaStatus() == QuotaStatus.ACTIVE %>" />
 

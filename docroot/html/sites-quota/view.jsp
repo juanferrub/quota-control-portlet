@@ -14,12 +14,12 @@
 	 */
 %>
 
-<%@ include file="/html/sites-quota/init.jsp"%>
+<%@ include file="/html/sites-quota/init.jsp" %>
 
-<portlet:renderURL  var="viewSitesQuotas"/>
+<portlet:renderURL var="viewSitesQuotas" />
 
 <c:if test="${not empty searchContainer}">
-	<liferay-ui:search-container searchContainer="${searchContainer}" delta="${paramDelta}" emptyResultsMessage="empty.message" iteratorURL="${portletURL}">
+	<liferay-ui:search-container delta="${paramDelta}" emptyResultsMessage="empty.message" iteratorURL="${portletURL}" searchContainer="${searchContainer}">
 		<liferay-ui:search-container-results results="${list}" total="${count}" />
 		<liferay-ui:search-container-row className="org.lsug.quota.server.util.SiteQuotaVO"
 										 escapedModel="<%= true %>" modelVar="siteVO">
@@ -42,15 +42,15 @@
 
 				<liferay-ui:icon-menu>
 					<portlet:renderURL var="editSiteURL">
-						<portlet:param name="<%=Constants.CMD%>" value="<%=Constants.UPDATE%>"/>
-						<portlet:param name="backURL" value="${viewSitesQuotas}"/>
-						<portlet:param name="quotaId" value="${siteVO.quotaId }"/>
+						<portlet:param name="<%=Constants.CMD%>" value="<%=Constants.UPDATE%>" />
+						<portlet:param name="backURL" value="${viewSitesQuotas}" />
+						<portlet:param name="quotaId" value="${siteVO.quotaId }" />
 					</portlet:renderURL>
 
 					<portlet:renderURL var="showSiteHistoryURL">
-						<portlet:param name="<%=Constants.CMD%>" value="<%=Constants.PREVIEW%>"/>
-						<portlet:param name="backURL" value="${viewSitesQuotas}"/>
-						<portlet:param name="quotaId" value="${siteVO.quotaId }"/>
+						<portlet:param name="<%=Constants.CMD%>" value="<%=Constants.PREVIEW%>" />
+						<portlet:param name="backURL" value="${viewSitesQuotas}" />
+						<portlet:param name="quotaId" value="${siteVO.quotaId }" />
 					</portlet:renderURL>
 
 					<liferay-ui:icon image="edit" url="${editSiteURL}" />
@@ -61,7 +61,7 @@
 			</liferay-ui:search-container-column-text>
 
 		</liferay-ui:search-container-row>
-		<liferay-ui:search-iterator searchContainer="${searchContainer}" paginate="<%= true %>"/>
+		<liferay-ui:search-iterator paginate="<%= true %>" searchContainer="${searchContainer}" />
 	</liferay-ui:search-container>
 
 </c:if>

@@ -30,8 +30,6 @@
 
 	</liferay-ui:search-container-row>
 
-	<liferay-ui:search-iterator  paginate="<%= true %>"/>
+	<liferay-ui:search-iterator paginate="<%= true %>" />
 
 </liferay-ui:search-container>
-
-

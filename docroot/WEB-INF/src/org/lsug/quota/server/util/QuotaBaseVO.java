@@ -14,14 +14,20 @@
 
 package org.lsug.quota.server.util;
 
-import java.util.Locale;
+import com.liferay.portal.kernel.language.LanguageUtil;
+
 import java.text.NumberFormat;
 
-import com.liferay.portal.kernel.language.LanguageUtil;
+import java.util.Locale;
+
 import org.lsug.quota.model.QuotaStatus;
 import org.lsug.quota.util.QuotaConstants;
 
-public class QuotaBaseVO  {
+
+/**
+ * Base for Quota VO's
+ */
+public class QuotaBaseVO {
 
 	public String getUsed() {
 		NumberFormat nf = NumberFormat.getInstance(_loc);
@@ -34,7 +40,7 @@ public class QuotaBaseVO  {
 		NumberFormat nf = NumberFormat.getInstance(_loc);
 		nf.setMaximumFractionDigits(5);
 
-		if(_assigned == 0) {
+		if (_assigned == 0) {
 			return "0 %";
 		}
 
@@ -45,7 +51,7 @@ public class QuotaBaseVO  {
 		NumberFormat nf = NumberFormat.getInstance(_loc);
 		nf.setMaximumFractionDigits(5);
 
-		if(_assigned == 0) {
+		if (_assigned == 0) {
 			return "0";
 		}
 
@@ -64,7 +70,7 @@ public class QuotaBaseVO  {
 	}
 
 	public String getActive() {
-		if(_active) {
+		if (_active) {
 			return LanguageUtil.get(_loc,"enabled");
 		}
 		else {

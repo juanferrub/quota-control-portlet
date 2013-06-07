@@ -21,13 +21,13 @@
 <%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-<%@ page import="com.liferay.portal.kernel.util.OrderByComparator" %>
-<%@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
-<%@ page import="com.liferay.portal.service.GroupLocalServiceUtil" %>
-<%@ page import="org.lsug.quota.util.QuotaConstants" %>
+<%@ page import="com.liferay.portal.kernel.util.OrderByComparator" %><%@
+page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
+page import="com.liferay.portal.service.GroupLocalServiceUtil" %><%@
+page import="org.lsug.quota.util.QuotaConstants" %>
 
-<%@ page import="org.lsug.quota.model.Quota" %>
-<%@ page import="org.lsug.quota.model.QuotaStatus" %>
+<%@ page import="org.lsug.quota.model.Quota" %><%@
+page import="org.lsug.quota.model.QuotaStatus" %>
 
 
 <%@ page import="javax.portlet.ActionRequest" %>
@@ -36,12 +36,12 @@
 
 <%@ page import="com.liferay.portal.kernel.util.Constants" %>
 
-<%@page import="com.liferay.portal.kernel.bean.BeanParamUtil"%>
-<%@page import="com.liferay.portal.kernel.util.ParamUtil"%>
-<%@ page import="java.text.DecimalFormat" %>
-<%@ page import="java.math.BigDecimal" %>
-<%@ page import="com.liferay.portal.kernel.dao.search.SearchContainer" %>
-<%@ page import="org.lsug.quota.model.QuotaDailyLog" %>
+<%@ page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
+page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
+page import="java.text.DecimalFormat" %><%@
+page import="java.math.BigDecimal" %><%@
+page import="com.liferay.portal.kernel.dao.search.SearchContainer" %><%@
+page import="org.lsug.quota.model.QuotaDailyLog" %>
 
 
 <portlet:defineObjects />

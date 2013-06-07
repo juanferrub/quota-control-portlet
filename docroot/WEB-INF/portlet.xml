@@ -76,9 +76,7 @@
 	<portlet>
 		<portlet-name>my-quota-portlet</portlet-name>
 		<display-name>My Quota</display-name>
-		<portlet-class>
-			com.liferay.util.bridges.mvc.MVCPortlet
-		</portlet-class>
+		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
 		<init-param>
 			<name>view-template</name>
 			<value>/html/my-quota/view.jsp</value>
@@ -97,7 +95,7 @@
 		<portlet-info>
 			<title>My Quota</title>
 			<short-title>NewPortlet</short-title>
-			<keywords></keywords>
+			<keywords/>
 		</portlet-info>
 		<security-role-ref>
 			<role-name>administrator</role-name>

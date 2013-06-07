@@ -1,10 +1,9 @@
 
 package org.lsug.quota.util.comparator;
 
-import org.lsug.quota.model.Quota;
-
 import com.liferay.portal.kernel.util.OrderByComparator;
 
+import org.lsug.quota.model.Quota;
 public class QuotaAssignedComparator extends OrderByComparator {
 
 	public static String ORDER_BY_ASC = "quotaAssigned ASC";
@@ -64,5 +63,6 @@ public class QuotaAssignedComparator extends OrderByComparator {
 
 		return _ascending;
 	}
+
 	private boolean _ascending;
 }

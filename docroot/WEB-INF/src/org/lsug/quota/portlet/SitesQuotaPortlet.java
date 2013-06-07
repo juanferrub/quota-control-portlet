@@ -14,42 +14,41 @@
 
 package org.lsug.quota.portlet;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.RenderRequest;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.RenderRequest;
+
 import org.lsug.quota.model.Quota;
 import org.lsug.quota.server.util.QuotaBaseVO;
 import org.lsug.quota.server.util.SiteQuotaVO;
 import org.lsug.quota.service.QuotaLocalServiceUtil;
 import org.lsug.quota.util.QuotaConstants;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SitesQuotaPortlet extends QuotaBasePortlet {
-
 
 	@Override
 	protected List<QuotaBaseVO> getQuotas(RenderRequest req, int start, int end)
-			throws SystemException, PortalException {
+			throws PortalException, SystemException {
 		ThemeDisplay themeDisplay =
 			(ThemeDisplay) req.getAttribute(WebKeys.THEME_DISPLAY);
 
 		long companyId = themeDisplay.getCompanyId();
 
-		List<QuotaBaseVO> sitesQuotas =
-				new ArrayList<QuotaBaseVO>();
+		List<QuotaBaseVO> sitesQuotas = new ArrayList<QuotaBaseVO>();
 
-		List<Quota> sitesQuotasList =
-			QuotaLocalServiceUtil.getSitesQuotas(companyId,-1,-1);
+		List<Quota> sitesQuotasList = QuotaLocalServiceUtil.getSitesQuotas(
+			companyId, -1, -1);
 
 		for (Quota quota : sitesQuotasList) {
-			sitesQuotas.add(new SiteQuotaVO(quota,req.getLocale()));
+			sitesQuotas.add(new SiteQuotaVO(quota, req.getLocale()));
 		}
 
 		return sitesQuotas;
@@ -66,12 +65,12 @@ public class SitesQuotaPortlet extends QuotaBasePortlet {
 	}
 
 	@Override
-	protected Quota getQuotaFromRequest (ActionRequest req)
-			throws SystemException, PortalException {
+	protected Quota getQuotaFromRequest(ActionRequest req)
+			throws PortalException, SystemException {
 		long quotaId = ParamUtil.getLong(req, "quotaId");
-		boolean quotaStatus =
-				ParamUtil.getBoolean(req, "sites-quota.edit.status");
-		long quotaAssigned  =
+		boolean quotaStatus = ParamUtil.getBoolean(
+				req, "sites-quota.edit.status");
+		long quotaAssigned =
 				(long)(ParamUtil.getDouble(req, "sites-quota.edit.assigned")
 				* QuotaConstants.BYTES_TO_GB);
 		int quotaAlert = ParamUtil.getInteger(req, "sites-quota.edit.alert");

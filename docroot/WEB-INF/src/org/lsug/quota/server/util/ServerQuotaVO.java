@@ -14,21 +14,22 @@
 
 package org.lsug.quota.server.util;
 
-import com.liferay.portal.service.UserLocalServiceUtil;
-import org.lsug.quota.model.Quota;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 import java.util.Locale;
+
+import org.lsug.quota.model.Quota;
 
 public class ServerQuotaVO extends QuotaBaseVO {
 
 	private Locale locale;
 
 	public ServerQuotaVO(Quota q, Locale loc)
-			throws SystemException, PortalException {
+			throws PortalException, SystemException {
 
 		Company c = CompanyLocalServiceUtil.getCompany(q.getClassPK());
 

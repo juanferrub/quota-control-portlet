@@ -14,16 +14,16 @@
 
 package org.lsug.quota.server.util;
 
-import org.lsug.quota.model.QuotaDailyLog;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.Locale;
 
+import org.lsug.quota.model.QuotaDailyLog;
 public class QuotaDailyLogVO extends QuotaBaseVO {
 
-	public QuotaDailyLogVO(QuotaDailyLog qdl,Locale locale) {
+	public QuotaDailyLogVO(QuotaDailyLog qdl, Locale locale) {
 
 		setActive(qdl.getQuotaStatus());
 		setUsed(qdl.getQuotaUsed());
@@ -41,6 +41,7 @@ public class QuotaDailyLogVO extends QuotaBaseVO {
 		else {
 			sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
 		}
+
 		return sdf.format(_date);
 	}
 
@@ -49,6 +50,5 @@ public class QuotaDailyLogVO extends QuotaBaseVO {
 	}
 
 	private Date _date;
-
 
 }

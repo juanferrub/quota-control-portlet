@@ -8,22 +8,26 @@ import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalService;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceWrapper;
 import com.liferay.portlet.dynamicdatamapping.storage.Fields;
-import org.lsug.quota.service.QuotaLocalServiceUtil;
 
 import java.io.File;
 import java.io.InputStream;
+
 import java.util.Map;
 
+import org.lsug.quota.service.QuotaLocalServiceUtil;
 
-public class QuotaListenerDLFileEntryLocalService 
+/**
+ * Wrapper for DL File modifications
+ */
+public class QuotaListenerDLFileEntryLocalService
 	extends DLFileEntryLocalServiceWrapper {
-	
+
 	public QuotaListenerDLFileEntryLocalService(
 		DLFileEntryLocalService dlFileEntryLocalService) {
-		
+
 		super(dlFileEntryLocalService);
 	}
-	
+
 	public DLFileEntry addFileEntry(
 			long userId, long groupId, long repositoryId, long folderId,
 			String sourceFileName, String mimeType, String title,
@@ -36,18 +40,18 @@ public class QuotaListenerDLFileEntryLocalService
 			throw new QuotaExceededException();
 
 		DLFileEntry dlFileEntry = super.addFileEntry(
-			userId, groupId, repositoryId, folderId, sourceFileName, mimeType, 
+			userId, groupId, repositoryId, folderId, sourceFileName, mimeType,
 			title, description, changeLog, fileEntryTypeId, fieldsMap, file, is,
 			size, serviceContext);
 
 		QuotaLocalServiceUtil.increaseQuotaUsage(groupId, userId, size);
-		
+
 		return dlFileEntry;
 	}
 
 	protected void deleteFileEntry(DLFileEntry dlFileEntry)
 			throws PortalException, SystemException {
-		
+
 		super.deleteDLFileEntry(dlFileEntry);
 
 		long dlFileEntryTotalSize =
@@ -58,7 +62,7 @@ public class QuotaListenerDLFileEntryLocalService
 				dlFileEntry.getGroupId(), dlFileEntry.getUserId(),
 				dlFileEntryTotalSize);
 	}
-	
+
 	public void deleteFileEntry(long fileEntryId)
 		throws PortalException, SystemException {
 

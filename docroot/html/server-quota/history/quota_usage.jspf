@@ -17,7 +17,7 @@
 <div id="usageChart">
 </div>
 
-<script type="text/javascript" charset="utf-8">
+<script charset="utf-8" type="text/javascript">
 	AUI().ready(
 			'aui-chart',
 			'datatype',

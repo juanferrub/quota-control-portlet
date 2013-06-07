@@ -26,19 +26,19 @@ import org.lsug.quota.model.QuotaStatus;
  * @author Brian Wing Shun Chan
  */
 public class QuotaImpl extends QuotaBaseImpl {
-	/*
+	/**
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never reference this class directly. All methods that expect a quota model instance should use the {@link org.lsug.quota.model.Quota} interface instead.
 	 */
 	public QuotaImpl() {
 	}
-	
+
 	public boolean hasFreeMB(long mb) {
 		return getQuotaStatus() == QuotaStatus.INACTIVE ||
 			this.getQuotaAssigned() - this.getQuotaUsed() >= mb;
 	}
-	
+
 	public boolean isExceeded() {
 		return (
 			((double) this.getQuotaUsed() * 100) /

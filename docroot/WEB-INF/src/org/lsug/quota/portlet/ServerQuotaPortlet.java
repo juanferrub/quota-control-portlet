@@ -14,28 +14,26 @@
 
 package org.lsug.quota.portlet;
 
-
-import javax.portlet.ActionRequest;
-import javax.portlet.RenderRequest;
-
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
-import org.lsug.quota.model.Quota;
-import org.lsug.quota.server.util.QuotaBaseVO;
-import org.lsug.quota.server.util.ServerQuotaVO;
-import org.lsug.quota.service.QuotaLocalServiceUtil;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.ParamUtil;
-import org.lsug.quota.util.QuotaConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.RenderRequest;
+
+import org.lsug.quota.model.Quota;
+import org.lsug.quota.server.util.QuotaBaseVO;
+import org.lsug.quota.server.util.ServerQuotaVO;
+import org.lsug.quota.service.QuotaLocalServiceUtil;
+import org.lsug.quota.util.QuotaConstants;
 public class ServerQuotaPortlet extends QuotaBasePortlet {
 
 	@Override
@@ -50,7 +48,7 @@ public class ServerQuotaPortlet extends QuotaBasePortlet {
 
 	@Override
 	protected List<QuotaBaseVO> getQuotas(RenderRequest req, int start, int end)
-			throws SystemException, PortalException {
+			throws PortalException, SystemException {
 
 		List<Company> listCompany = CompanyLocalServiceUtil.getCompanies();
 
@@ -62,19 +60,19 @@ public class ServerQuotaPortlet extends QuotaBasePortlet {
 					.getQuotaByClassNameIdClassPK(
 						PortalUtil.getClassNameId(Company.class.getName()),
 						c.getCompanyId());
-			serverQuotas.add(new ServerQuotaVO(quota,req.getLocale()));
+			serverQuotas.add(new ServerQuotaVO(quota, req.getLocale()));
 		}
 
 		return serverQuotas;
 	}
 
 	@Override
-	protected Quota getQuotaFromRequest (ActionRequest req)
-			throws SystemException, PortalException {
+	protected Quota getQuotaFromRequest(ActionRequest req)
+			throws PortalException, SystemException {
 		long quotaId = ParamUtil.getLong(req, "quotaId");
-		boolean quotaStatus =
-				ParamUtil.getBoolean(req, "server-quota.edit.status");
-		long quotaAssigned  =
+		boolean quotaStatus = ParamUtil.getBoolean(
+				req, "server-quota.edit.status");
+		long quotaAssigned =
 			(long)(ParamUtil.getDouble(req, "server-quota.edit.assigned")
 			* QuotaConstants.BYTES_TO_GB);
 		int quotaAlert = ParamUtil.getInteger(req, "server-quota.edit.alert");
@@ -88,6 +86,6 @@ public class ServerQuotaPortlet extends QuotaBasePortlet {
 		return quota;
 	}
 
-	private Log _log =
-		LogFactoryUtil.getLog(ServerQuotaPortlet.class.getName());
+	private Log _log = LogFactoryUtil.getLog(
+		ServerQuotaPortlet.class.getName());
 }

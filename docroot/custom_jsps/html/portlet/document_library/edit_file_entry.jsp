@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@page import="com.liferay.portal.kernel.scripting.ExecutionException"%>
+<%@ page import="com.liferay.portal.kernel.scripting.ExecutionException" %>
 
 <%@ include file="/html/portlet/document_library/init.jsp" %>
 
