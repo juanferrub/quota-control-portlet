@@ -212,7 +212,11 @@ public class QuotaClp extends BaseModelImpl<Quota> implements Quota {
 		_quotaAlert = quotaAlert;
 	}
 
-	public boolean hasFreeMB(long mb) {
+	public boolean hasFreeSize(long bytes) {
+		throw new UnsupportedOperationException();
+	}
+
+	public boolean isAlarmZone() {
 		throw new UnsupportedOperationException();
 	}
 

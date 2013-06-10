@@ -44,18 +44,18 @@ public class QuotaBaseVO {
 			return "0 %";
 		}
 
-		return nf.format(_used / _assigned)+ " %";
+		return nf.format((_used / _assigned) * 100)+ " %";
 	}
 
 	public String getPercent() {
 		NumberFormat nf = NumberFormat.getInstance(_loc);
-		nf.setMaximumFractionDigits(5);
+		nf.setMaximumFractionDigits(3);
 
 		if (_assigned == 0) {
 			return "0";
 		}
 
-		return nf.format(_used / _assigned);
+		return nf.format((_used / _assigned) * 100);
 	}
 
 	public long getQuotaId() {

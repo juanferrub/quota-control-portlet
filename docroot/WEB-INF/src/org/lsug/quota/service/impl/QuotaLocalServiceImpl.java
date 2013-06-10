@@ -15,19 +15,35 @@
 package org.lsug.quota.service.impl;
 
 import com.liferay.compat.portal.util.PortalUtil;
+import com.liferay.mail.service.MailServiceUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Role;
+import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserGroupRole;
+import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.RoleLocalServiceUtil;
+import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 import org.lsug.quota.NoSuchQuotaException;
 import org.lsug.quota.QuotaExceededException;
@@ -133,7 +149,7 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 			throws SystemException {
 		long val = 0;
 		int status = 0;
-		//FIXME create a finder
+		//FIXME create finder
 		List<DLFileVersion> dlFileVersionList = DLFileVersionLocalServiceUtil.getFileVersions(dlFileEntryId, status);
 		for (DLFileVersion dlFileVersion : dlFileVersionList) {
 			val += dlFileVersion.getSize();
@@ -166,9 +182,11 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 	public boolean hasQuota(long groupId, long userId, long size)
 			throws PortalException, SystemException {
 		Quota groupQuota = getGroupQuota(groupId);
-		Quota companyQuota = getCompanyQuota(groupId);
 
-		return groupQuota.hasFreeMB(size) && companyQuota.hasFreeMB(size);
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+		Quota companyQuota = getCompanyQuota(group.getCompanyId());
+
+		return groupQuota.hasFreeSize(size) && companyQuota.hasFreeSize(size);
 	}
 
 	public void decreaseQuotaUsage(long groupId, long userId, long size)
@@ -208,6 +226,18 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 
 		quota.setQuotaUsed(quota.getQuotaUsed() + fileSize);
 
+		if (quota.isAlarmZone()) {
+			try {
+				sendAlarmMail(quota);
+			}
+			catch (PortalException e) {
+				_log.error("Error sending mail",e);
+			}
+			catch (UnsupportedEncodingException e) {
+				_log.error("Error sending mail", e);
+			}
+		}
+
 		return updateQuota(quota);
 	}
 
@@ -228,6 +258,67 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		return quotaPersistence.update(quota, false);
 	}
 
+	private void sendAlarmMail(Quota quota)
+			throws SystemException, PortalException, UnsupportedEncodingException {
+		MailMessage message = new MailMessage();
+
+		long quotaClassName = quota.getClassNameId();
+		long classPK = quota.getClassPK();
+		String quotaType = null;
+
+		List<InternetAddress> addresses = new ArrayList<InternetAddress>();
+
+		if (PortalUtil.getClassNameId(Company.class) == quotaClassName) {
+			//Company quota
+			quotaType = "Company";
+			Role adminRole = RoleLocalServiceUtil.getRole(classPK,"Administrator");
+
+			List<User> users = UserLocalServiceUtil.getRoleUsers(adminRole.getRoleId());
+
+			for (User user : users) {
+				InternetAddress internetAddress = new InternetAddress(
+						user.getEmailAddress(), user.getFullName());
+
+				addresses.add(internetAddress);
+			}
+		}
+		else if (PortalUtil.getClassNameId(Group.class) == quotaClassName) {
+			quotaType = "Site";
+
+			Group site = GroupLocalServiceUtil.getGroup(classPK);
+			Company company = CompanyLocalServiceUtil.getCompany(site.getCompanyId());
+
+			Role siteAdminRole = RoleLocalServiceUtil.getRole(
+				company.getCompanyId(),"Site administrator");
+
+			List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.
+				getUserGroupRolesByGroupAndRole(
+					site.getGroupId(), siteAdminRole.getRoleId());
+
+			for (UserGroupRole userGroupRole : userGroupRoles) {
+				User user = userGroupRole.getUser();
+
+				InternetAddress userAddress = new InternetAddress(
+						user.getEmailAddress(), user.getFullName());
+
+				addresses.add(userAddress);
+			}
+		}
+
+		message.setBody("The quota for the "+quotaType+" has been overpassed");
+		message.setSubject("Quota problem");
+		InternetAddress[] toAddresses =
+			addresses.toArray(new InternetAddress[addresses.size()]);
+
+		message.setTo(toAddresses);
+		try {
+			message.setFrom(new InternetAddress("victormirandabeltran@gmail.com"));
+		} catch (AddressException e) {
+		}
+
+		MailServiceUtil.sendEmail(message);
+	}
+
 	private long getInitialDiskUsage(long classNameId, long classPk) throws SystemException {
 		long size = 0;
 
@@ -240,7 +331,7 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		}
 
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
-				DLFileVersion.class);
+			DLFileVersion.class);
 		dynamicQuery.add(PropertyFactoryUtil.forName(filter).eq(classPk));
 
 		List<DLFileVersion> dlFileVersionList =
@@ -252,5 +343,8 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 
 		return size;
 	}
+
+	private Log _log = LogFactoryUtil.getLog(
+		QuotaLocalServiceImpl.class.getName());
 
 }

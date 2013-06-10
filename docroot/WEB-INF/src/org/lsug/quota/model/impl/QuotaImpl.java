@@ -34,15 +34,20 @@ public class QuotaImpl extends QuotaBaseImpl {
 	public QuotaImpl() {
 	}
 
-	public boolean hasFreeMB(long mb) {
+	public boolean hasFreeSize(long bytes) {
 		return getQuotaStatus() == QuotaStatus.INACTIVE ||
-			this.getQuotaAssigned() - this.getQuotaUsed() >= mb;
+			getQuotaAssigned() - getQuotaUsed() >= bytes;
+	}
+
+	public boolean isAlarmZone () {
+		return ((double)getQuotaUsed() / getQuotaAssigned()*100)
+			> getQuotaAlert();
 	}
 
 	public boolean isExceeded() {
 		return (
-			((double) this.getQuotaUsed() * 100) /
-				(double) this.getQuotaAssigned()) >= this.getQuotaAlert();
+			((double) getQuotaUsed() * 100) /
+				(double) getQuotaAssigned()) >= getQuotaAlert();
 	}
 
 }

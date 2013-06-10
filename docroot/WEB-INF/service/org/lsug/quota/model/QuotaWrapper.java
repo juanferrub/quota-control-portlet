@@ -354,8 +354,12 @@ public class QuotaWrapper implements Quota, ModelWrapper<Quota> {
 		_quota.persist();
 	}
 
-	public boolean hasFreeMB(long mb) {
-		return _quota.hasFreeMB(mb);
+	public boolean hasFreeSize(long bytes) {
+		return _quota.hasFreeSize(bytes);
+	}
+
+	public boolean isAlarmZone() {
+		return _quota.isAlarmZone();
 	}
 
 	public boolean isExceeded() {
