@@ -39,15 +39,15 @@ public class QuotaImpl extends QuotaBaseImpl {
 			getQuotaAssigned() - getQuotaUsed() >= bytes;
 	}
 
-	public boolean isAlarmZone () {
-		return ((double)getQuotaUsed() / getQuotaAssigned()*100)
-			> getQuotaAlert();
+	public boolean isAlarmZone() {
+		return getQuotaAlert() != 0 &&
+			((double)getQuotaUsed() / getQuotaAssigned()*100) > getQuotaAlert();
 	}
 
 	public boolean isExceeded() {
 		return (
 			((double) getQuotaUsed() * 100) /
-				(double) getQuotaAssigned()) >= getQuotaAlert();
+			(double) getQuotaAssigned()) >= getQuotaAlert();
 	}
 
 }

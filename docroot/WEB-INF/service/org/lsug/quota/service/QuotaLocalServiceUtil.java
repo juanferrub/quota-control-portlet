@@ -269,6 +269,18 @@ public class QuotaLocalServiceUtil {
 		return getService().invokeMethod(name, parameterTypes, arguments);
 	}
 
+	/**
+	* Create a new quota
+	*
+	* @param classNameId classNameId attribute
+	* @param classPK the identifier
+	* @param quotaAlert % of alarm
+	* @param quotaAssigned size of the quota in bytes
+	* @param quotaUsed usage at startup
+	* @param quotaStatus 0 disabled, 1 enabled
+	* @return
+	* @throws SystemException
+	*/
 	public static org.lsug.quota.model.Quota addQuota(long classNameId,
 		long classPK, int quotaAlert, long quotaAssigned, long quotaUsed,
 		int quotaStatus)
@@ -276,12 +288,6 @@ public class QuotaLocalServiceUtil {
 		return getService()
 				   .addQuota(classNameId, classPK, quotaAlert, quotaAssigned,
 			quotaUsed, quotaStatus);
-	}
-
-	public static boolean checkAlerts(long groupId, long userId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().checkAlerts(groupId, userId);
 	}
 
 	public static org.lsug.quota.model.Quota getCompanyQuota(long companyId)
@@ -302,6 +308,12 @@ public class QuotaLocalServiceUtil {
 	public static long getDLFileEntryTotalSize(long dlFileEntryId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().getDLFileEntryTotalSize(dlFileEntryId);
+	}
+
+	public static java.util.List<org.lsug.quota.model.Quota> getServerQuotas(
+		int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getServerQuotas(start, end);
 	}
 
 	public static java.util.List<org.lsug.quota.model.Quota> getSitesQuotas(
@@ -327,17 +339,13 @@ public class QuotaLocalServiceUtil {
 
 	public static void decreaseQuotaUsage(long groupId, long userId, long size)
 		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException,
-			org.lsug.quota.NoSuchQuotaException,
-			org.lsug.quota.QuotaExceededException {
+			com.liferay.portal.kernel.exception.SystemException {
 		getService().decreaseQuotaUsage(groupId, userId, size);
 	}
 
 	public static void increaseQuotaUsage(long groupId, long userId, long size)
 		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException,
-			org.lsug.quota.NoSuchQuotaException,
-			org.lsug.quota.QuotaExceededException {
+			com.liferay.portal.kernel.exception.SystemException {
 		getService().increaseQuotaUsage(groupId, userId, size);
 	}
 

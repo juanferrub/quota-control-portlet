@@ -112,25 +112,25 @@ public class QuotaLocalServiceClpInvoker {
 				"long", "long", "int", "long", "long", "int"
 			};
 
-		_methodName51 = "checkAlerts";
+		_methodName51 = "getCompanyQuota";
 
-		_methodParameterTypes51 = new String[] { "long", "long" };
+		_methodParameterTypes51 = new String[] { "long" };
 
-		_methodName52 = "getCompanyQuota";
+		_methodName52 = "getGroupQuota";
 
 		_methodParameterTypes52 = new String[] { "long" };
 
-		_methodName53 = "getGroupQuota";
+		_methodName53 = "getQuotaByClassNameIdClassPK";
 
-		_methodParameterTypes53 = new String[] { "long" };
+		_methodParameterTypes53 = new String[] { "long", "long" };
 
-		_methodName54 = "getQuotaByClassNameIdClassPK";
+		_methodName54 = "getDLFileEntryTotalSize";
 
-		_methodParameterTypes54 = new String[] { "long", "long" };
+		_methodParameterTypes54 = new String[] { "long" };
 
-		_methodName55 = "getDLFileEntryTotalSize";
+		_methodName55 = "getServerQuotas";
 
-		_methodParameterTypes55 = new String[] { "long" };
+		_methodParameterTypes55 = new String[] { "int", "int" };
 
 		_methodName56 = "getSitesQuotas";
 
@@ -277,29 +277,29 @@ public class QuotaLocalServiceClpInvoker {
 
 		if (_methodName51.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes51, parameterTypes)) {
-			return QuotaLocalServiceUtil.checkAlerts(((Long)arguments[0]).longValue(),
-				((Long)arguments[1]).longValue());
+			return QuotaLocalServiceUtil.getCompanyQuota(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName52.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes52, parameterTypes)) {
-			return QuotaLocalServiceUtil.getCompanyQuota(((Long)arguments[0]).longValue());
+			return QuotaLocalServiceUtil.getGroupQuota(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName53.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes53, parameterTypes)) {
-			return QuotaLocalServiceUtil.getGroupQuota(((Long)arguments[0]).longValue());
-		}
-
-		if (_methodName54.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes54, parameterTypes)) {
 			return QuotaLocalServiceUtil.getQuotaByClassNameIdClassPK(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue());
 		}
 
+		if (_methodName54.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes54, parameterTypes)) {
+			return QuotaLocalServiceUtil.getDLFileEntryTotalSize(((Long)arguments[0]).longValue());
+		}
+
 		if (_methodName55.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes55, parameterTypes)) {
-			return QuotaLocalServiceUtil.getDLFileEntryTotalSize(((Long)arguments[0]).longValue());
+			return QuotaLocalServiceUtil.getServerQuotas(((Integer)arguments[0]).intValue(),
+				((Integer)arguments[1]).intValue());
 		}
 
 		if (_methodName56.equals(name) &&
