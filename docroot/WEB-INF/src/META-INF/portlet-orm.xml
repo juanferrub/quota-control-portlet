@@ -12,6 +12,7 @@
 			<id name="quotaId" />
 			<basic name="classNameId" />
 			<basic name="classPK" />
+			<basic name="parentQuotaId" />
 			<basic name="quotaAssigned" />
 			<basic name="quotaUsed" />
 			<basic name="quotaStatus" />
@@ -22,8 +23,27 @@
 			<transient name="primaryKeyObj" />
 		</attributes>
 	</mapped-superclass>
+	<mapped-superclass class="org.lsug.quota.model.impl.QuotaDailyLogModelImpl">
+		<attributes>
+			<id name="quotaDailyLogId" />
+			<basic name="dayAnalyzed">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="quotaId" />
+			<basic name="quotaAssigned" />
+			<basic name="quotaUsed" />
+			<basic name="quotaStatus" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
 	<entity class="org.lsug.quota.model.impl.QuotaImpl" name="Quota">
 		<table name="LSUGQUOTA_Quota" />
+		<attributes />
+	</entity>
+	<entity class="org.lsug.quota.model.impl.QuotaDailyLogImpl" name="QuotaDailyLog">
+		<table name="LSUGQUOTA_QuotaDailyLog" />
 		<attributes />
 	</entity>
 </entity-mappings>

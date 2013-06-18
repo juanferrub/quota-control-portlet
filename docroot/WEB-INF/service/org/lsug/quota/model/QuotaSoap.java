@@ -33,6 +33,7 @@ public class QuotaSoap implements Serializable {
 		soapModel.setQuotaId(model.getQuotaId());
 		soapModel.setClassNameId(model.getClassNameId());
 		soapModel.setClassPK(model.getClassPK());
+		soapModel.setParentQuotaId(model.getParentQuotaId());
 		soapModel.setQuotaAssigned(model.getQuotaAssigned());
 		soapModel.setQuotaUsed(model.getQuotaUsed());
 		soapModel.setQuotaStatus(model.getQuotaStatus());
@@ -113,6 +114,14 @@ public class QuotaSoap implements Serializable {
 		_classPK = classPK;
 	}
 
+	public long getParentQuotaId() {
+		return _parentQuotaId;
+	}
+
+	public void setParentQuotaId(long parentQuotaId) {
+		_parentQuotaId = parentQuotaId;
+	}
+
 	public long getQuotaAssigned() {
 		return _quotaAssigned;
 	}
@@ -148,6 +157,7 @@ public class QuotaSoap implements Serializable {
 	private long _quotaId;
 	private long _classNameId;
 	private long _classPK;
+	private long _parentQuotaId;
 	private long _quotaAssigned;
 	private long _quotaUsed;
 	private int _quotaStatus;

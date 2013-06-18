@@ -47,6 +47,7 @@ public class QuotaWrapper implements Quota, ModelWrapper<Quota> {
 		attributes.put("quotaId", getQuotaId());
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("classPK", getClassPK());
+		attributes.put("parentQuotaId", getParentQuotaId());
 		attributes.put("quotaAssigned", getQuotaAssigned());
 		attributes.put("quotaUsed", getQuotaUsed());
 		attributes.put("quotaStatus", getQuotaStatus());
@@ -72,6 +73,12 @@ public class QuotaWrapper implements Quota, ModelWrapper<Quota> {
 
 		if (classPK != null) {
 			setClassPK(classPK);
+		}
+
+		Long parentQuotaId = (Long)attributes.get("parentQuotaId");
+
+		if (parentQuotaId != null) {
+			setParentQuotaId(parentQuotaId);
 		}
 
 		Long quotaAssigned = (Long)attributes.get("quotaAssigned");
@@ -182,6 +189,24 @@ public class QuotaWrapper implements Quota, ModelWrapper<Quota> {
 	*/
 	public void setClassPK(long classPK) {
 		_quota.setClassPK(classPK);
+	}
+
+	/**
+	* Returns the parent quota ID of this quota.
+	*
+	* @return the parent quota ID of this quota
+	*/
+	public long getParentQuotaId() {
+		return _quota.getParentQuotaId();
+	}
+
+	/**
+	* Sets the parent quota ID of this quota.
+	*
+	* @param parentQuotaId the parent quota ID of this quota
+	*/
+	public void setParentQuotaId(long parentQuotaId) {
+		_quota.setParentQuotaId(parentQuotaId);
 	}
 
 	/**
@@ -329,8 +354,12 @@ public class QuotaWrapper implements Quota, ModelWrapper<Quota> {
 		_quota.persist();
 	}
 
-	public boolean hasFreeMB(long mb) {
-		return _quota.hasFreeMB(mb);
+	public boolean hasFreeSize(long bytes) {
+		return _quota.hasFreeSize(bytes);
+	}
+
+	public boolean isAlarmZone() {
+		return _quota.isAlarmZone();
 	}
 
 	public boolean isExceeded() {

@@ -109,6 +109,20 @@ public interface QuotaModel extends AttachedModel, BaseModel<Quota> {
 	public void setClassPK(long classPK);
 
 	/**
+	 * Returns the parent quota ID of this quota.
+	 *
+	 * @return the parent quota ID of this quota
+	 */
+	public long getParentQuotaId();
+
+	/**
+	 * Sets the parent quota ID of this quota.
+	 *
+	 * @param parentQuotaId the parent quota ID of this quota
+	 */
+	public void setParentQuotaId(long parentQuotaId);
+
+	/**
 	 * Returns the quota assigned of this quota.
 	 *
 	 * @return the quota assigned of this quota

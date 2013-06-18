@@ -67,12 +67,13 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 			{ "quotaId", Types.BIGINT },
 			{ "classNameId", Types.BIGINT },
 			{ "classPK", Types.BIGINT },
+			{ "parentQuotaId", Types.BIGINT },
 			{ "quotaAssigned", Types.BIGINT },
 			{ "quotaUsed", Types.BIGINT },
 			{ "quotaStatus", Types.INTEGER },
 			{ "quotaAlert", Types.INTEGER }
 		};
-	public static final String TABLE_SQL_CREATE = "create table LSUGQUOTA_Quota (quotaId LONG not null primary key,classNameId LONG,classPK LONG,quotaAssigned LONG,quotaUsed LONG,quotaStatus INTEGER,quotaAlert INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table LSUGQUOTA_Quota (quotaId LONG not null primary key,classNameId LONG,classPK LONG,parentQuotaId LONG,quotaAssigned LONG,quotaUsed LONG,quotaStatus INTEGER,quotaAlert INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table LSUGQUOTA_Quota";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
@@ -88,6 +89,7 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 			true);
 	public static long CLASSNAMEID_COLUMN_BITMASK = 1L;
 	public static long CLASSPK_COLUMN_BITMASK = 2L;
+	public static long PARENTQUOTAID_COLUMN_BITMASK = 4L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -105,6 +107,7 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 		model.setQuotaId(soapModel.getQuotaId());
 		model.setClassNameId(soapModel.getClassNameId());
 		model.setClassPK(soapModel.getClassPK());
+		model.setParentQuotaId(soapModel.getParentQuotaId());
 		model.setQuotaAssigned(soapModel.getQuotaAssigned());
 		model.setQuotaUsed(soapModel.getQuotaUsed());
 		model.setQuotaStatus(soapModel.getQuotaStatus());
@@ -170,6 +173,7 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 		attributes.put("quotaId", getQuotaId());
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("classPK", getClassPK());
+		attributes.put("parentQuotaId", getParentQuotaId());
 		attributes.put("quotaAssigned", getQuotaAssigned());
 		attributes.put("quotaUsed", getQuotaUsed());
 		attributes.put("quotaStatus", getQuotaStatus());
@@ -196,6 +200,12 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 
 		if (classPK != null) {
 			setClassPK(classPK);
+		}
+
+		Long parentQuotaId = (Long)attributes.get("parentQuotaId");
+
+		if (parentQuotaId != null) {
+			setParentQuotaId(parentQuotaId);
 		}
 
 		Long quotaAssigned = (Long)attributes.get("quotaAssigned");
@@ -293,6 +303,27 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 	}
 
 	@JSON
+	public long getParentQuotaId() {
+		return _parentQuotaId;
+	}
+
+	public void setParentQuotaId(long parentQuotaId) {
+		_columnBitmask |= PARENTQUOTAID_COLUMN_BITMASK;
+
+		if (!_setOriginalParentQuotaId) {
+			_setOriginalParentQuotaId = true;
+
+			_originalParentQuotaId = _parentQuotaId;
+		}
+
+		_parentQuotaId = parentQuotaId;
+	}
+
+	public long getOriginalParentQuotaId() {
+		return _originalParentQuotaId;
+	}
+
+	@JSON
 	public long getQuotaAssigned() {
 		return _quotaAssigned;
 	}
@@ -363,6 +394,7 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 		quotaImpl.setQuotaId(getQuotaId());
 		quotaImpl.setClassNameId(getClassNameId());
 		quotaImpl.setClassPK(getClassPK());
+		quotaImpl.setParentQuotaId(getParentQuotaId());
 		quotaImpl.setQuotaAssigned(getQuotaAssigned());
 		quotaImpl.setQuotaUsed(getQuotaUsed());
 		quotaImpl.setQuotaStatus(getQuotaStatus());
@@ -429,6 +461,10 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 
 		quotaModelImpl._setOriginalClassPK = false;
 
+		quotaModelImpl._originalParentQuotaId = quotaModelImpl._parentQuotaId;
+
+		quotaModelImpl._setOriginalParentQuotaId = false;
+
 		quotaModelImpl._columnBitmask = 0;
 	}
 
@@ -441,6 +477,8 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 		quotaCacheModel.classNameId = getClassNameId();
 
 		quotaCacheModel.classPK = getClassPK();
+
+		quotaCacheModel.parentQuotaId = getParentQuotaId();
 
 		quotaCacheModel.quotaAssigned = getQuotaAssigned();
 
@@ -455,7 +493,7 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{quotaId=");
 		sb.append(getQuotaId());
@@ -463,6 +501,8 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 		sb.append(getClassNameId());
 		sb.append(", classPK=");
 		sb.append(getClassPK());
+		sb.append(", parentQuotaId=");
+		sb.append(getParentQuotaId());
 		sb.append(", quotaAssigned=");
 		sb.append(getQuotaAssigned());
 		sb.append(", quotaUsed=");
@@ -477,7 +517,7 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(28);
 
 		sb.append("<model><model-name>");
 		sb.append("org.lsug.quota.model.Quota");
@@ -494,6 +534,10 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 		sb.append(
 			"<column><column-name>classPK</column-name><column-value><![CDATA[");
 		sb.append(getClassPK());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>parentQuotaId</column-name><column-value><![CDATA[");
+		sb.append(getParentQuotaId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>quotaAssigned</column-name><column-value><![CDATA[");
@@ -528,6 +572,9 @@ public class QuotaModelImpl extends BaseModelImpl<Quota> implements QuotaModel {
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
+	private long _parentQuotaId;
+	private long _originalParentQuotaId;
+	private boolean _setOriginalParentQuotaId;
 	private long _quotaAssigned;
 	private long _quotaUsed;
 	private int _quotaStatus;

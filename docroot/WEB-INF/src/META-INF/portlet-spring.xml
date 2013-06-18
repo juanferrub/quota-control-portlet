@@ -4,4 +4,7 @@
 	<bean id="org.lsug.quota.service.QuotaLocalService" class="org.lsug.quota.service.impl.QuotaLocalServiceImpl" />
 	<bean id="org.lsug.quota.service.QuotaService" class="org.lsug.quota.service.impl.QuotaServiceImpl" />
 	<bean id="org.lsug.quota.service.persistence.QuotaPersistence" class="org.lsug.quota.service.persistence.QuotaPersistenceImpl" parent="basePersistence" />
+	<bean id="org.lsug.quota.service.QuotaDailyLogLocalService" class="org.lsug.quota.service.impl.QuotaDailyLogLocalServiceImpl" />
+	<bean id="org.lsug.quota.service.QuotaDailyLogService" class="org.lsug.quota.service.impl.QuotaDailyLogServiceImpl" />
+	<bean id="org.lsug.quota.service.persistence.QuotaDailyLogPersistence" class="org.lsug.quota.service.persistence.QuotaDailyLogPersistenceImpl" parent="basePersistence" />
 </beans>

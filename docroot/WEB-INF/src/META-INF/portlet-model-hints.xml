@@ -5,9 +5,18 @@
 		<field name="quotaId" type="long" />
 		<field name="classNameId" type="long" />
 		<field name="classPK" type="long" />
+		<field name="parentQuotaId" type="long" />
 		<field name="quotaAssigned" type="long" />
 		<field name="quotaUsed" type="long" />
 		<field name="quotaStatus" type="int" />
 		<field name="quotaAlert" type="int" />
+	</model>
+	<model name="org.lsug.quota.model.QuotaDailyLog">
+		<field name="quotaDailyLogId" type="long" />
+		<field name="dayAnalyzed" type="Date" />
+		<field name="quotaId" type="long" />
+		<field name="quotaAssigned" type="long" />
+		<field name="quotaUsed" type="long" />
+		<field name="quotaStatus" type="int" />
 	</model>
 </model-hints>

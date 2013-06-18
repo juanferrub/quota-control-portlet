@@ -4,7 +4,7 @@
 	<portlet>
 		<portlet-name>server-quota-portlet</portlet-name>
 		<display-name>Server Quota Portlet</display-name>
-		<portlet-class>org.lsug.quota.server.portlet.ServerQuotaPortlet</portlet-class>
+		<portlet-class>org.lsug.quota.portlet.ServerQuotaPortlet</portlet-class>
 		<init-param>
 			<name>view-template</name>
 			<value>/html/server-quota/view.jsp</value>
@@ -18,7 +18,7 @@
 		<supported-locale>es</supported-locale>
 		<supported-locale>eu</supported-locale>
 		<supported-locale>gl</supported-locale>
-		<resource-bundle>content.Language</resource-bundle>
+		<resource-bundle>content.serverquota.Language</resource-bundle>
 		<portlet-info>
 			<title>Server Quota</title>
 			<short-title>Server Quota</short-title>
@@ -54,7 +54,7 @@
 		<supported-locale>es</supported-locale>
 		<supported-locale>eu</supported-locale>
 		<supported-locale>gl</supported-locale>
-		<resource-bundle>content.Language</resource-bundle>
+		<resource-bundle>content.sitequota.Language</resource-bundle>
 		<portlet-info>
 			<title>Sites Quota</title>
 			<short-title>Sites Quota</short-title>
@@ -76,9 +76,7 @@
 	<portlet>
 		<portlet-name>my-quota-portlet</portlet-name>
 		<display-name>My Quota</display-name>
-		<portlet-class>
-			com.liferay.util.bridges.mvc.MVCPortlet
-		</portlet-class>
+		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
 		<init-param>
 			<name>view-template</name>
 			<value>/html/my-quota/view.jsp</value>
@@ -88,10 +86,16 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+		<supported-locale>ca</supported-locale>
+		<supported-locale>en</supported-locale>
+		<supported-locale>es</supported-locale>
+		<supported-locale>eu</supported-locale>
+		<supported-locale>gl</supported-locale>
+		<resource-bundle>content.myquota.Language</resource-bundle>
 		<portlet-info>
 			<title>My Quota</title>
 			<short-title>NewPortlet</short-title>
-			<keywords></keywords>
+			<keywords/>
 		</portlet-info>
 		<security-role-ref>
 			<role-name>administrator</role-name>

@@ -1,0 +1,35 @@
+<%
+	/**
+	 * Copyright (c) 2013 Liferay Spain User Group All rights reserved.
+	 *
+	 * This library is free software; you can redistribute it and/or modify it under
+	 * the terms of the GNU Lesser General Public License as published by the Free
+	 * Software Foundation; either version 2.1 of the License, or (at your option)
+	 * any later version.
+	 *
+	 * This library is distributed in the hope that it will be useful, but WITHOUT
+	 * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+	 * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+	 * details.
+	 */
+%>
+
+<liferay-ui:search-container delta="${paramDelta}" emptyResultsMessage="empty.message" iteratorURL="${portletURL}">
+
+	<liferay-ui:search-container-results results="${list}" total="${count}" />
+	<liferay-ui:search-container-row className="org.lsug.quota.server.util.QuotaDailyLogVO"
+									 escapedModel="<%= true %>" modelVar="dailyLog">
+
+		<liferay-ui:search-container-column-text name="day" value="${dailyLog.date}" />
+		<liferay-ui:search-container-column-text name="status" value="${dailyLog.active}" />
+
+		<liferay-ui:search-container-column-text name="used" value="${dailyLog.used}" />
+		<liferay-ui:search-container-column-text name="assigned" value="${dailyLog.assigned }" />
+		<liferay-ui:search-container-column-text name="percent" value="${dailyLog.usedPercent}" />
+
+
+	</liferay-ui:search-container-row>
+
+	<liferay-ui:search-iterator paginate="<%= true %>" />
+
+</liferay-ui:search-container>

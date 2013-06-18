@@ -30,8 +30,11 @@ import com.liferay.portal.service.persistence.ResourcePersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
 
 import org.lsug.quota.model.Quota;
+import org.lsug.quota.service.QuotaDailyLogLocalService;
+import org.lsug.quota.service.QuotaDailyLogService;
 import org.lsug.quota.service.QuotaLocalService;
 import org.lsug.quota.service.QuotaService;
+import org.lsug.quota.service.persistence.QuotaDailyLogPersistence;
 import org.lsug.quota.service.persistence.QuotaPersistence;
 
 import javax.sql.DataSource;
@@ -108,6 +111,63 @@ public abstract class QuotaServiceBaseImpl extends BaseServiceImpl
 	 */
 	public void setQuotaPersistence(QuotaPersistence quotaPersistence) {
 		this.quotaPersistence = quotaPersistence;
+	}
+
+	/**
+	 * Returns the quota daily log local service.
+	 *
+	 * @return the quota daily log local service
+	 */
+	public QuotaDailyLogLocalService getQuotaDailyLogLocalService() {
+		return quotaDailyLogLocalService;
+	}
+
+	/**
+	 * Sets the quota daily log local service.
+	 *
+	 * @param quotaDailyLogLocalService the quota daily log local service
+	 */
+	public void setQuotaDailyLogLocalService(
+		QuotaDailyLogLocalService quotaDailyLogLocalService) {
+		this.quotaDailyLogLocalService = quotaDailyLogLocalService;
+	}
+
+	/**
+	 * Returns the quota daily log remote service.
+	 *
+	 * @return the quota daily log remote service
+	 */
+	public QuotaDailyLogService getQuotaDailyLogService() {
+		return quotaDailyLogService;
+	}
+
+	/**
+	 * Sets the quota daily log remote service.
+	 *
+	 * @param quotaDailyLogService the quota daily log remote service
+	 */
+	public void setQuotaDailyLogService(
+		QuotaDailyLogService quotaDailyLogService) {
+		this.quotaDailyLogService = quotaDailyLogService;
+	}
+
+	/**
+	 * Returns the quota daily log persistence.
+	 *
+	 * @return the quota daily log persistence
+	 */
+	public QuotaDailyLogPersistence getQuotaDailyLogPersistence() {
+		return quotaDailyLogPersistence;
+	}
+
+	/**
+	 * Sets the quota daily log persistence.
+	 *
+	 * @param quotaDailyLogPersistence the quota daily log persistence
+	 */
+	public void setQuotaDailyLogPersistence(
+		QuotaDailyLogPersistence quotaDailyLogPersistence) {
+		this.quotaDailyLogPersistence = quotaDailyLogPersistence;
 	}
 
 	/**
@@ -299,6 +359,12 @@ public abstract class QuotaServiceBaseImpl extends BaseServiceImpl
 	protected QuotaService quotaService;
 	@BeanReference(type = QuotaPersistence.class)
 	protected QuotaPersistence quotaPersistence;
+	@BeanReference(type = QuotaDailyLogLocalService.class)
+	protected QuotaDailyLogLocalService quotaDailyLogLocalService;
+	@BeanReference(type = QuotaDailyLogService.class)
+	protected QuotaDailyLogService quotaDailyLogService;
+	@BeanReference(type = QuotaDailyLogPersistence.class)
+	protected QuotaDailyLogPersistence quotaDailyLogPersistence;
 	@BeanReference(type = CounterLocalService.class)
 	protected CounterLocalService counterLocalService;
 	@BeanReference(type = ResourceLocalService.class)

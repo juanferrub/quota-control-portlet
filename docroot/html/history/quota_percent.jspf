@@ -1,0 +1,82 @@
+<%
+	/**
+	 * Copyright (c) 2013 Liferay Spain User Group All rights reserved.
+	 *
+	 * This library is free software; you can redistribute it and/or modify it under
+	 * the terms of the GNU Lesser General Public License as published by the Free
+	 * Software Foundation; either version 2.1 of the License, or (at your option)
+	 * any later version.
+	 *
+	 * This library is distributed in the hope that it will be useful, but WITHOUT
+	 * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+	 * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+	 * details.
+	 */
+%>
+
+<div id="demoLineChart">
+</div>
+
+<script charset="utf-8" type="text/javascript">
+	AUI().ready(
+			'aui-chart',
+			'datatype',
+			'aui-delayed-task',
+			function(A) {
+				LineChart = {
+					expenses:
+					<%= history %>
+					,
+					series: [
+						{displayName: '%', yField: 'perc'}
+					],
+					formatCurrencyAxisLabel: function(value) {
+						return A.DataType.Number.format(
+								value,
+								{
+									suffix: ' %',
+									thousandsSeparator: ',',
+									decimalPlaces: 3
+								}
+						);
+					},
+
+					getDataTipText: function(item, index, series) {
+						var toolTipText = item.day;
+
+						toolTipText += '\n' + LineChart.formatCurrencyAxisLabel(item[series.yField])+ ' %';
+
+						return toolTipText;
+					},
+					currencyAxis: (new A.Chart.NumericAxis())
+				};
+
+				LineChart.dataSource = new A.DataSource.Local({
+							source: LineChart.expenses
+						}
+				).plug(
+						{
+							fn: A.DataSourceJSONSchema,
+							cfg: {
+								resultFields: ['day', 'perc']
+							}
+						}
+				);
+
+				LineChart.currencyAxis.labelFunction = LineChart.formatCurrencyAxisLabel;
+
+				LineChart.chart = new A.LineChart(
+						{
+							dataSource: LineChart.dataSource,
+							series: LineChart.series,
+							xField: 'day',
+							yAxis: LineChart.currencyAxis,
+							width: '100%',
+							height: 300,
+							dataTipFunction: LineChart.getDataTipText
+						}
+				).render('#demoLineChart');
+			}
+	);
+
+</script>

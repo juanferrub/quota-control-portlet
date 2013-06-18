@@ -1,5 +1,3 @@
-<%@page import="com.liferay.portal.kernel.bean.BeanParamUtil"%>
-<%@page import="com.liferay.portal.kernel.util.ParamUtil"%>
 <%
 /**
  * Copyright (c) 2013 Liferay Spain User Group All rights reserved.
@@ -19,39 +17,39 @@
 <%@ include file="/html/server-quota/init.jsp" %>
 
 <%
-Quota quota = (Quota) request.getAttribute( "quota" );
+	Quota quota = (Quota) request.getAttribute( "quota" );
+	String backURL = ParamUtil.getString(request, "backURL");
+	long quotaId = BeanParamUtil.getLong(quota, request, "quotaId");
+	long classPK = BeanParamUtil.getLong(quota, request, "classPK");
 
-String backURL = ParamUtil.getString(request, "backURL");
+	BigDecimal bdAssignedGB = new BigDecimal((double)quota.getQuotaAssigned()/ (QuotaConstants.BYTES_TO_GB));
 
-long quotaId = BeanParamUtil.getLong(quota, request, "quotaId");
+	double assignedGB = bdAssignedGB.setScale(3,BigDecimal.ROUND_UP).doubleValue();
 
-long classPK = BeanParamUtil.getLong(quota, request, "classPK");
+	String quotaAssignedString = String.valueOf(assignedGB);
 %>
 
-<portlet:actionURL var="editQuotaURL" name="saveServerQuota" />
+<portlet:actionURL name="saveQuota" var="editQuotaURL" />
 
-<liferay-ui:header
-	backURL="<%= backURL %>"
-/>
+<liferay-ui:header backURL="<%= backURL %>" title="server-quota.edit.title" />
+
 
 <%-- TODO: show error messages --%>
 <%-- <liferay-ui:error key="" message="" /> --%>
 
-<aui:form action="<%= editQuotaURL %>" method="post" name="fm" >
-	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= quotaId == 0 ? Constants.ADD : Constants.UPDATE %>"/>
+<aui:form action="<%= editQuotaURL %>" method="post" name="fm">
+	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= quotaId == 0 ? Constants.ADD : Constants.UPDATE %>" />
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 	<aui:input name="quotaId" type="hidden" value="<%= quotaId %>" />
 	<aui:input name="classPK" type="hidden" value="<%= classPK %>" />
 
-	<aui:model-context bean="<%= quota %>" model="<%= Quota.class %>" />
-
-	<aui:input name="quotaStatus" />
-	
 	<%-- TODO: add the "quotaAlertStatus" in the service --%>
 
-	<aui:input name="quotaAssigned" />
+	<aui:input name="server-quota.edit.assigned"  value="<%=quotaAssignedString%>" />
 
-	<aui:input name="quotaAlert" />
+	<aui:input name="server-quota.edit.alert" value="<%= quota.getQuotaAlert() %>" />
+
+	<aui:input name="server-quota.edit.status" type="checkbox" value="<%= quota.getQuotaStatus() == QuotaStatus.ACTIVE %>" />
 
 	<aui:button-row>
 		<aui:button type="submit" />
