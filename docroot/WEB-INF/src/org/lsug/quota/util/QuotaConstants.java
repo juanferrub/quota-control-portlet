@@ -17,4 +17,15 @@ package org.lsug.quota.util;
 public class QuotaConstants {
 
 	public final static int BYTES_TO_GB = 1024 * 1024 * 1024;
+
+	public final static int ROOT_QUOTA_ID = 0;
+
+	public final static String PATH_HISTORY = "/html/history/view_history.jsp";
+
+	public final static String PATH_SERVER_EDIT_QUOTA =
+		"/html/server-quota/edit_quota.jsp";
+
+	public final static String PATH_SITES_EDIT_QUOTA =
+		"/html/sites-quota/edit_quota.jsp";
+
 }

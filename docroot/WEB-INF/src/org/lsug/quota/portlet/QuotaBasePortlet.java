@@ -92,10 +92,10 @@ public abstract class QuotaBasePortlet extends MVCPortlet {
 			listQuotas = getQuotas(renderRequest, cur, paramDelta);
 		}
 		catch (SystemException e) {
-			e.printStackTrace();
+			_log.error(e);
 		}
 		catch (PortalException e) {
-			e.printStackTrace();
+			_log.error(e);
 		}
 
 		renderRequest.setAttribute("searchContainer", searchContainer);
@@ -107,21 +107,21 @@ public abstract class QuotaBasePortlet extends MVCPortlet {
 	protected void editQuota(RenderRequest renderRequest,
 		RenderResponse renderResponse) throws IOException, PortletException {
 		Quota quota = null;
-		final long quotaId = ParamUtil.getLong(renderRequest, "quotaId", 0);
 
 		try {
 			quota = QuotaLocalServiceUtil.getQuota(ParamUtil.getLong(
 				renderRequest, "quotaId"));
-		} catch (PortalException e) {
+		}
+		catch (PortalException e) {
 			_log.error(e);
-		} catch (SystemException e) {
+		}
+		catch (SystemException e) {
 			_log.error(e);
 		}
 
 		renderRequest.setAttribute("quota", quota);
 
-		include(getEditPage(), renderRequest,
-				renderResponse);
+		include(getEditPage(), renderRequest, renderResponse);
 	}
 
 	protected void showHistory(
@@ -137,6 +137,10 @@ public abstract class QuotaBasePortlet extends MVCPortlet {
 
 			List<QuotaDailyLog> quotaDailyLogList =
 				new ArrayList<QuotaDailyLog>();
+
+			int start = -1;
+			int end = -1;
+
 			quotaDailyLogList.addAll(QuotaDailyLogLocalServiceUtil.
 				getQuotaDailyLogsByQuotaId(quotaId));
 
@@ -176,7 +180,7 @@ public abstract class QuotaBasePortlet extends MVCPortlet {
 
 		renderRequest.setAttribute("quota", quota);
 
-		include(getShowHistoryPage(), renderRequest, renderResponse);
+		include(QuotaConstants.PATH_HISTORY, renderRequest, renderResponse);
 	}
 
 	public void saveQuota(ActionRequest req, ActionResponse res)
@@ -202,8 +206,6 @@ public abstract class QuotaBasePortlet extends MVCPortlet {
 		throws PortalException, SystemException;
 
 	protected abstract String getEditPage();
-
-	protected abstract String getShowHistoryPage();
 
 	protected abstract Quota getQuotaFromRequest(ActionRequest req)
 		throws PortalException, SystemException;

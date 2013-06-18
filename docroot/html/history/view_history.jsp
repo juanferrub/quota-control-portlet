@@ -14,7 +14,7 @@
  */
  %>
 
-<%@ include file="/html/server-quota/init.jsp" %>
+<%@ include file="/html/init.jsp" %>
 
 <%
 	Quota quota = (Quota) request.getAttribute( "quota" );
@@ -22,13 +22,13 @@
 	String history = (String) request.getAttribute( "history" ).toString();
 %>
 
-<liferay-ui:header backURL="<%= backURL %>" title="server-quota.history.title" />
+<liferay-ui:header backURL="<%= backURL %>" title="history.title" />
 
 <%-- TODO: show error messages --%>
 <%-- <liferay-ui:error key="" message="" /> --%>
 
 <liferay-ui:tabs
-   names="server-quota.history.history-percent,server-quota.history.history-usage,server-quota.history.history-log"
+   names="history.history-percent,history.history-usage,history.history-log"
   refresh="<%= false %>">
 
 	<liferay-ui:section>

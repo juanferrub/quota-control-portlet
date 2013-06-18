@@ -34,6 +34,10 @@
 			<finder-column name="classPK"/>
 		</finder>
 
+		<finder return-type="Collection" name="ClassNameId">
+			<finder-column name="classNameId"/>
+		</finder>
+
 		<finder return-type="Collection" name="ParentQuotaId">
 			<finder-column name="parentQuotaId"/>
 		</finder>

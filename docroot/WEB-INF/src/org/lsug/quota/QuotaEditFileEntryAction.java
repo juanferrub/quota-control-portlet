@@ -14,6 +14,8 @@
 
 package org.lsug.quota;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.scripting.ExecutionException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.struts.BaseStrutsPortletAction;
@@ -26,7 +28,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-
 public class QuotaEditFileEntryAction extends BaseStrutsPortletAction {
 
 	@Override
@@ -49,15 +50,15 @@ public class QuotaEditFileEntryAction extends BaseStrutsPortletAction {
 		}
 }
 
-@Override
+	@Override
 	public String render(StrutsPortletAction originalStrutsPortletAction,
-	PortletConfig portletConfig, RenderRequest renderRequest,
-	RenderResponse renderResponse)
+		PortletConfig portletConfig, RenderRequest renderRequest,
+		RenderResponse renderResponse)
 	throws Exception {
 
-	return originalStrutsPortletAction.render(
-		originalStrutsPortletAction, portletConfig, renderRequest,
-		renderResponse);
+		return originalStrutsPortletAction.render(
+			originalStrutsPortletAction, portletConfig, renderRequest,
+			renderResponse);
 }
 
 	@Override
@@ -66,9 +67,13 @@ public class QuotaEditFileEntryAction extends BaseStrutsPortletAction {
 	ResourceResponse resourceResponse)
 	throws Exception {
 
-	System.out.println("__CutomStrutsPortletAction serveResource");
+	_log.debug("__CustomStrutsPortletAction serveResource");
 
-	originalStrutsPortletAction.serveResource(originalStrutsPortletAction, portletConfig, resourceRequest, resourceResponse);
+	originalStrutsPortletAction.serveResource(
+		originalStrutsPortletAction, portletConfig, resourceRequest,
+		resourceResponse);
 	}
+
+	Log _log = LogFactoryUtil.getLog(QuotaEditFileEntryAction.class.getName());
 
 }

@@ -88,6 +88,26 @@ public class QuotaPersistenceImpl extends BasePersistenceImpl<Quota>
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
 			"countByClassNameIdClassPK",
 			new String[] { Long.class.getName(), Long.class.getName() });
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_CLASSNAMEID =
+		new FinderPath(QuotaModelImpl.ENTITY_CACHE_ENABLED,
+			QuotaModelImpl.FINDER_CACHE_ENABLED, QuotaImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByClassNameId",
+			new String[] {
+				Long.class.getName(),
+				
+			"java.lang.Integer", "java.lang.Integer",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CLASSNAMEID =
+		new FinderPath(QuotaModelImpl.ENTITY_CACHE_ENABLED,
+			QuotaModelImpl.FINDER_CACHE_ENABLED, QuotaImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByClassNameId",
+			new String[] { Long.class.getName() },
+			QuotaModelImpl.CLASSNAMEID_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_CLASSNAMEID = new FinderPath(QuotaModelImpl.ENTITY_CACHE_ENABLED,
+			QuotaModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByClassNameId",
+			new String[] { Long.class.getName() });
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_PARENTQUOTAID =
 		new FinderPath(QuotaModelImpl.ENTITY_CACHE_ENABLED,
 			QuotaModelImpl.FINDER_CACHE_ENABLED, QuotaImpl.class,
@@ -335,6 +355,27 @@ public class QuotaPersistenceImpl extends BasePersistenceImpl<Quota>
 		}
 
 		else {
+			if ((quotaModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CLASSNAMEID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(quotaModelImpl.getOriginalClassNameId())
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSNAMEID,
+					args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CLASSNAMEID,
+					args);
+
+				args = new Object[] {
+						Long.valueOf(quotaModelImpl.getClassNameId())
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSNAMEID,
+					args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CLASSNAMEID,
+					args);
+			}
+
 			if ((quotaModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PARENTQUOTAID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
@@ -657,6 +698,377 @@ public class QuotaPersistenceImpl extends BasePersistenceImpl<Quota>
 			else {
 				return (Quota)result;
 			}
+		}
+	}
+
+	/**
+	 * Returns all the quotas where classNameId = &#63;.
+	 *
+	 * @param classNameId the class name ID
+	 * @return the matching quotas
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Quota> findByClassNameId(long classNameId)
+		throws SystemException {
+		return findByClassNameId(classNameId, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the quotas where classNameId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param classNameId the class name ID
+	 * @param start the lower bound of the range of quotas
+	 * @param end the upper bound of the range of quotas (not inclusive)
+	 * @return the range of matching quotas
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Quota> findByClassNameId(long classNameId, int start, int end)
+		throws SystemException {
+		return findByClassNameId(classNameId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the quotas where classNameId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param classNameId the class name ID
+	 * @param start the lower bound of the range of quotas
+	 * @param end the upper bound of the range of quotas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching quotas
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Quota> findByClassNameId(long classNameId, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CLASSNAMEID;
+			finderArgs = new Object[] { classNameId };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_CLASSNAMEID;
+			finderArgs = new Object[] { classNameId, start, end, orderByComparator };
+		}
+
+		List<Quota> list = (List<Quota>)FinderCacheUtil.getResult(finderPath,
+				finderArgs, this);
+
+		if ((list != null) && !list.isEmpty()) {
+			for (Quota quota : list) {
+				if ((classNameId != quota.getClassNameId())) {
+					list = null;
+
+					break;
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(3 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(2);
+			}
+
+			query.append(_SQL_SELECT_QUOTA_WHERE);
+
+			query.append(_FINDER_COLUMN_CLASSNAMEID_CLASSNAMEID_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(classNameId);
+
+				list = (List<Quota>)QueryUtil.list(q, getDialect(), start, end);
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (list == null) {
+					FinderCacheUtil.removeResult(finderPath, finderArgs);
+				}
+				else {
+					cacheResult(list);
+
+					FinderCacheUtil.putResult(finderPath, finderArgs, list);
+				}
+
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first quota in the ordered set where classNameId = &#63;.
+	 *
+	 * @param classNameId the class name ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching quota
+	 * @throws org.lsug.quota.NoSuchQuotaException if a matching quota could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Quota findByClassNameId_First(long classNameId,
+		OrderByComparator orderByComparator)
+		throws NoSuchQuotaException, SystemException {
+		Quota quota = fetchByClassNameId_First(classNameId, orderByComparator);
+
+		if (quota != null) {
+			return quota;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("classNameId=");
+		msg.append(classNameId);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchQuotaException(msg.toString());
+	}
+
+	/**
+	 * Returns the first quota in the ordered set where classNameId = &#63;.
+	 *
+	 * @param classNameId the class name ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching quota, or <code>null</code> if a matching quota could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Quota fetchByClassNameId_First(long classNameId,
+		OrderByComparator orderByComparator) throws SystemException {
+		List<Quota> list = findByClassNameId(classNameId, 0, 1,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last quota in the ordered set where classNameId = &#63;.
+	 *
+	 * @param classNameId the class name ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching quota
+	 * @throws org.lsug.quota.NoSuchQuotaException if a matching quota could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Quota findByClassNameId_Last(long classNameId,
+		OrderByComparator orderByComparator)
+		throws NoSuchQuotaException, SystemException {
+		Quota quota = fetchByClassNameId_Last(classNameId, orderByComparator);
+
+		if (quota != null) {
+			return quota;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("classNameId=");
+		msg.append(classNameId);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchQuotaException(msg.toString());
+	}
+
+	/**
+	 * Returns the last quota in the ordered set where classNameId = &#63;.
+	 *
+	 * @param classNameId the class name ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching quota, or <code>null</code> if a matching quota could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Quota fetchByClassNameId_Last(long classNameId,
+		OrderByComparator orderByComparator) throws SystemException {
+		int count = countByClassNameId(classNameId);
+
+		List<Quota> list = findByClassNameId(classNameId, count - 1, count,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the quotas before and after the current quota in the ordered set where classNameId = &#63;.
+	 *
+	 * @param quotaId the primary key of the current quota
+	 * @param classNameId the class name ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next quota
+	 * @throws org.lsug.quota.NoSuchQuotaException if a quota with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Quota[] findByClassNameId_PrevAndNext(long quotaId,
+		long classNameId, OrderByComparator orderByComparator)
+		throws NoSuchQuotaException, SystemException {
+		Quota quota = findByPrimaryKey(quotaId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			Quota[] array = new QuotaImpl[3];
+
+			array[0] = getByClassNameId_PrevAndNext(session, quota,
+					classNameId, orderByComparator, true);
+
+			array[1] = quota;
+
+			array[2] = getByClassNameId_PrevAndNext(session, quota,
+					classNameId, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected Quota getByClassNameId_PrevAndNext(Session session, Quota quota,
+		long classNameId, OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_QUOTA_WHERE);
+
+		query.append(_FINDER_COLUMN_CLASSNAMEID_CLASSNAMEID_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(classNameId);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(quota);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<Quota> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
 		}
 	}
 
@@ -1167,6 +1579,18 @@ public class QuotaPersistenceImpl extends BasePersistenceImpl<Quota>
 	}
 
 	/**
+	 * Removes all the quotas where classNameId = &#63; from the database.
+	 *
+	 * @param classNameId the class name ID
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByClassNameId(long classNameId) throws SystemException {
+		for (Quota quota : findByClassNameId(classNameId)) {
+			remove(quota);
+		}
+	}
+
+	/**
 	 * Removes all the quotas where parentQuotaId = &#63; from the database.
 	 *
 	 * @param parentQuotaId the parent quota ID
@@ -1240,6 +1664,59 @@ public class QuotaPersistenceImpl extends BasePersistenceImpl<Quota>
 				}
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CLASSNAMEIDCLASSPK,
+					finderArgs, count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of quotas where classNameId = &#63;.
+	 *
+	 * @param classNameId the class name ID
+	 * @return the number of matching quotas
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByClassNameId(long classNameId) throws SystemException {
+		Object[] finderArgs = new Object[] { classNameId };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_CLASSNAMEID,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_QUOTA_WHERE);
+
+			query.append(_FINDER_COLUMN_CLASSNAMEID_CLASSNAMEID_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(classNameId);
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CLASSNAMEID,
 					finderArgs, count);
 
 				closeSession(session);
@@ -1386,6 +1863,7 @@ public class QuotaPersistenceImpl extends BasePersistenceImpl<Quota>
 	private static final String _SQL_COUNT_QUOTA_WHERE = "SELECT COUNT(quota) FROM Quota quota WHERE ";
 	private static final String _FINDER_COLUMN_CLASSNAMEIDCLASSPK_CLASSNAMEID_2 = "quota.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_CLASSNAMEIDCLASSPK_CLASSPK_2 = "quota.classPK = ?";
+	private static final String _FINDER_COLUMN_CLASSNAMEID_CLASSNAMEID_2 = "quota.classNameId = ?";
 	private static final String _FINDER_COLUMN_PARENTQUOTAID_PARENTQUOTAID_2 = "quota.parentQuotaId = ?";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "quota.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Quota exists with the primary key ";

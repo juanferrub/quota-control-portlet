@@ -23,7 +23,6 @@ import java.util.Locale;
 import org.lsug.quota.model.QuotaStatus;
 import org.lsug.quota.util.QuotaConstants;
 
-
 /**
  * Base for Quota VO's
  */

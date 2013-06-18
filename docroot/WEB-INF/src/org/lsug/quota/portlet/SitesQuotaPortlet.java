@@ -45,7 +45,7 @@ public class SitesQuotaPortlet extends QuotaBasePortlet {
 		List<QuotaBaseVO> sitesQuotas = new ArrayList<QuotaBaseVO>();
 
 		List<Quota> sitesQuotasList = QuotaLocalServiceUtil.getSitesQuotas(
-			companyId, -1, -1);
+			companyId, start, end);
 
 		for (Quota quota : sitesQuotasList) {
 			sitesQuotas.add(new SiteQuotaVO(quota, req.getLocale()));
@@ -56,23 +56,21 @@ public class SitesQuotaPortlet extends QuotaBasePortlet {
 
 	@Override
 	protected String getEditPage() {
-		return "/html/sites-quota/edit_quota.jsp";
-	}
-
-	@Override
-	protected String getShowHistoryPage() {
-		return "/html/sites-quota/history/history_server.jsp";
+		return QuotaConstants.PATH_SITES_EDIT_QUOTA;
 	}
 
 	@Override
 	protected Quota getQuotaFromRequest(ActionRequest req)
 			throws PortalException, SystemException {
 		long quotaId = ParamUtil.getLong(req, "quotaId");
+
 		boolean quotaStatus = ParamUtil.getBoolean(
-				req, "sites-quota.edit.status");
+			req, "sites-quota.edit.status");
+
 		long quotaAssigned =
-				(long)(ParamUtil.getDouble(req, "sites-quota.edit.assigned")
-				* QuotaConstants.BYTES_TO_GB);
+			(long)(ParamUtil.getDouble(req, "sites-quota.edit.assigned") *
+			QuotaConstants.BYTES_TO_GB);
+
 		int quotaAlert = ParamUtil.getInteger(req, "sites-quota.edit.alert");
 
 		Quota quota = QuotaLocalServiceUtil.getQuota(quotaId);

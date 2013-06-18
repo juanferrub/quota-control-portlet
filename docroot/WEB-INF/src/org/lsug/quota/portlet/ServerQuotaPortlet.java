@@ -19,9 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.model.Company;
-import com.liferay.portal.service.CompanyLocalServiceUtil;
-import com.liferay.portal.util.PortalUtil;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,36 +32,33 @@ import org.lsug.quota.server.util.QuotaBaseVO;
 import org.lsug.quota.server.util.ServerQuotaVO;
 import org.lsug.quota.service.QuotaLocalServiceUtil;
 import org.lsug.quota.util.QuotaConstants;
+
+/**
+ * ServerQuotaPortlet
+ * Manages the quotas of the server companies
+ */
 public class ServerQuotaPortlet extends QuotaBasePortlet {
 
 	@Override
 	protected String getEditPage() {
-		return "/html/server-quota/edit_quota.jsp";
-	}
-
-	@Override
-	protected String getShowHistoryPage() {
-		return "/html/server-quota/history/history_server.jsp";
+		return QuotaConstants.PATH_SERVER_EDIT_QUOTA;
 	}
 
 	@Override
 	protected List<QuotaBaseVO> getQuotas(RenderRequest req, int start, int end)
 			throws PortalException, SystemException {
 
-		List<Company> listCompany = CompanyLocalServiceUtil.getCompanies();
+		List<Quota> serverQuotas =
+			QuotaLocalServiceUtil.getServerQuotas(start,end);
 
-		List<QuotaBaseVO> serverQuotas =
-			new ArrayList<QuotaBaseVO>(listCompany.size());
+		List<QuotaBaseVO> serverQuotasVO =
+				new ArrayList<QuotaBaseVO>(serverQuotas.size());
 
-		for (Company c : listCompany) {
-			Quota quota = QuotaLocalServiceUtil
-					.getQuotaByClassNameIdClassPK(
-						PortalUtil.getClassNameId(Company.class.getName()),
-						c.getCompanyId());
-			serverQuotas.add(new ServerQuotaVO(quota, req.getLocale()));
+		for (Quota q : serverQuotas) {
+			serverQuotasVO.add(new ServerQuotaVO(q, req.getLocale()));
 		}
 
-		return serverQuotas;
+		return serverQuotasVO;
 	}
 
 	@Override

@@ -25,11 +25,15 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Role;
+import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroupRole;
+import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
@@ -39,6 +43,7 @@ import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil;
 
 import java.io.UnsupportedEncodingException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,10 +51,10 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.lsug.quota.NoSuchQuotaException;
-import org.lsug.quota.QuotaExceededException;
 import org.lsug.quota.model.Quota;
 import org.lsug.quota.model.QuotaStatus;
 import org.lsug.quota.service.base.QuotaLocalServiceBaseImpl;
+import org.lsug.quota.util.QuotaConstants;
 
 /**
  * The implementation of the quota local service. <p> All custom service methods
@@ -66,6 +71,17 @@ import org.lsug.quota.service.base.QuotaLocalServiceBaseImpl;
  */
 public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 
+	/**
+	 * Create a new quota
+	 * @param classNameId classNameId attribute
+	 * @param classPK the identifier
+	 * @param quotaAlert % of alarm
+	 * @param quotaAssigned size of the quota in bytes
+	 * @param quotaUsed usage at startup
+	 * @param quotaStatus 0 disabled, 1 enabled
+	 * @return
+	 * @throws SystemException
+	 */
 	public Quota addQuota(
 			long classNameId, long classPK, int quotaAlert, long quotaAssigned,
 			long quotaUsed, int quotaStatus)
@@ -82,7 +98,8 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		quota.setQuotaStatus(quotaStatus);
 
 		if (classNameId == PortalUtil.getClassNameId(Company.class)) {
-			quota.setParentQuotaId(0);
+			//Company quotas don't have parents
+			quota.setParentQuotaId(QuotaConstants.ROOT_QUOTA_ID);
 		}
 		else if (classNameId == PortalUtil.getClassNameId(Group.class)) {
 			try {
@@ -91,19 +108,11 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 				quota.setParentQuotaId(companyQuota.getQuotaId());
 			}
 			catch (PortalException e) {
+				_log.error("Error calculating parent quota of ");
 			}
 		}
 
 		return addQuota(quota);
-	}
-
-	public boolean checkAlerts(long groupId, long userId)
-			throws PortalException, SystemException {
-
-		Quota groupQuota = getGroupQuota(groupId);
-		Quota companyQuota = getCompanyQuota(groupId);
-
-		return groupQuota.isExceeded() || companyQuota.isExceeded();
 	}
 
 	public Quota getCompanyQuota(long companyId) throws SystemException {
@@ -111,9 +120,11 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 
 		try {
 			quota = getQuotaByClassNameIdClassPK(
-					PortalUtil.getClassNameId(Company.class), companyId);
-		} catch (SystemException e) {
-			e.printStackTrace();
+				PortalUtil.getClassNameId(Company.class), companyId);
+		}
+		catch (SystemException e) {
+			_log.error(
+				"Error obtaining company quota with companyId="+companyId,e);
 		}
 
 		return quota;
@@ -124,9 +135,9 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 
 		try {
 			quota = getQuotaByClassNameIdClassPK(
-					PortalUtil.getClassNameId(Group.class), groupId);
+				PortalUtil.getClassNameId(Group.class), groupId);
 		} catch (SystemException e) {
-			e.printStackTrace();
+			_log.error("Error getting group quota with groupId:"+groupId, e);
 		}
 
 		return quota;
@@ -140,6 +151,7 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 			return getQuotaPersistence().findByClassNameIdClassPK(
 				classNameId, classPK);
 		} catch (NoSuchQuotaException e) {
+			//if the quota doesn't exist, create a new quota
 			long quotaUsed = getInitialDiskUsage(classNameId, classPK);
 			return addQuota(classNameId, classPK, 0, 0, quotaUsed, 0);
 		}
@@ -149,8 +161,12 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 			throws SystemException {
 		long val = 0;
 		int status = 0;
+
 		//FIXME create finder
-		List<DLFileVersion> dlFileVersionList = DLFileVersionLocalServiceUtil.getFileVersions(dlFileEntryId, status);
+		List<DLFileVersion> dlFileVersionList =
+			DLFileVersionLocalServiceUtil.getFileVersions(
+				dlFileEntryId, status);
+
 		for (DLFileVersion dlFileVersion : dlFileVersionList) {
 			val += dlFileVersion.getSize();
 		}
@@ -158,23 +174,32 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		return val;
 	}
 
-	public List<Quota> getSitesQuotas(long companyId, int start, int end) throws SystemException {
+	public List<Quota> getServerQuotas (int start, int end)
+		throws SystemException {
+
+		return quotaPersistence.findByClassNameId(
+			PortalUtil.getClassNameId(Company.class),start,end);
+	}
+
+	public List<Quota> getSitesQuotas(long companyId, int start, int end)
+		throws SystemException {
+
 		Quota companyQuota = getCompanyQuota(companyId);
-		List<Quota> result =
-				quotaPersistence.findByParentQuotaId(
-						companyQuota.getQuotaId(), start, end);
+
+		List<Quota> result = quotaPersistence.findByParentQuotaId(
+			companyQuota.getQuotaId(), start, end);
 
 		return result;
 	}
 
 	public List<Quota> getSitesQuotas(
-			long companyId, int start, int end, OrderByComparator orderByComparator)
-			throws PortalException, SystemException {
+		long companyId, int start, int end, OrderByComparator orderByComparator)
+		throws PortalException, SystemException {
 
 		Quota companyQuota = getCompanyQuota(companyId);
-		List<Quota> result =
-			quotaPersistence.findByParentQuotaId(
-				companyQuota.getQuotaId(), start, end);
+
+		List<Quota> result = quotaPersistence.findByParentQuotaId(
+			companyQuota.getQuotaId(), start, end);
 
 		return result;
 	}
@@ -190,8 +215,7 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 	}
 
 	public void decreaseQuotaUsage(long groupId, long userId, long size)
-			throws PortalException, SystemException, NoSuchQuotaException,
-			QuotaExceededException {
+		throws PortalException, SystemException {
 
 		final Group group = GroupLocalServiceUtil.getGroup(groupId);
 
@@ -204,17 +228,16 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 	}
 
 	public void increaseQuotaUsage(long groupId, long userId, long size)
-			throws PortalException, SystemException, NoSuchQuotaException,
-			QuotaExceededException {
+			throws PortalException, SystemException {
 
 		final Group group = GroupLocalServiceUtil.getGroup(groupId);
 
 		updateQuota(
-				PortalUtil.getClassNameId(Group.class), group.getGroupId(),
+			PortalUtil.getClassNameId(Group.class), group.getGroupId(),
 				size);
 
 		updateQuota(
-				PortalUtil.getClassNameId(Company.class), group.getCompanyId(),
+			PortalUtil.getClassNameId(Company.class), group.getCompanyId(),
 				size);
 	}
 
@@ -259,7 +282,7 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 	}
 
 	private void sendAlarmMail(Quota quota)
-			throws SystemException, PortalException, UnsupportedEncodingException {
+			throws PortalException, SystemException, UnsupportedEncodingException {
 		MailMessage message = new MailMessage();
 
 		long quotaClassName = quota.getClassNameId();
@@ -271,25 +294,29 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 		if (PortalUtil.getClassNameId(Company.class) == quotaClassName) {
 			//Company quota
 			quotaType = "Company";
-			Role adminRole = RoleLocalServiceUtil.getRole(classPK,"Administrator");
+			Role adminRole = RoleLocalServiceUtil.getRole(
+				classPK,RoleConstants.ADMINISTRATOR);
 
-			List<User> users = UserLocalServiceUtil.getRoleUsers(adminRole.getRoleId());
+			List<User> users = UserLocalServiceUtil.getRoleUsers(
+				adminRole.getRoleId());
 
 			for (User user : users) {
 				InternetAddress internetAddress = new InternetAddress(
-						user.getEmailAddress(), user.getFullName());
+					user.getEmailAddress(), user.getFullName());
 
 				addresses.add(internetAddress);
 			}
 		}
 		else if (PortalUtil.getClassNameId(Group.class) == quotaClassName) {
+			//Site quota
 			quotaType = "Site";
 
 			Group site = GroupLocalServiceUtil.getGroup(classPK);
-			Company company = CompanyLocalServiceUtil.getCompany(site.getCompanyId());
+			Company company =
+				CompanyLocalServiceUtil.getCompany(site.getCompanyId());
 
 			Role siteAdminRole = RoleLocalServiceUtil.getRole(
-				company.getCompanyId(),"Site administrator");
+					company.getCompanyId(),RoleConstants.SITE_ADMINISTRATOR);
 
 			List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.
 				getUserGroupRolesByGroupAndRole(
@@ -299,21 +326,30 @@ public class QuotaLocalServiceImpl extends QuotaLocalServiceBaseImpl {
 				User user = userGroupRole.getUser();
 
 				InternetAddress userAddress = new InternetAddress(
-						user.getEmailAddress(), user.getFullName());
+					user.getEmailAddress(), user.getFullName());
 
 				addresses.add(userAddress);
 			}
 		}
 
-		message.setBody("The quota for the "+quotaType+" has been overpassed");
+		message.setBody("The quota for the "+quotaType+" has been overtaken");
 		message.setSubject("Quota problem");
-		InternetAddress[] toAddresses =
-			addresses.toArray(new InternetAddress[addresses.size()]);
+
+		InternetAddress[] toAddresses = addresses.toArray(
+			new InternetAddress[addresses.size()]);
 
 		message.setTo(toAddresses);
+
 		try {
-			message.setFrom(new InternetAddress("victormirandabeltran@gmail.com"));
-		} catch (AddressException e) {
+			String fromAddress = PrefsPropsUtil.getStringFromNames(
+				CompanyThreadLocal.getCompanyId(),
+				PropsKeys.SITES_EMAIL_FROM_ADDRESS,
+				PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
+
+			message.setFrom(new InternetAddress(fromAddress));
+		}
+		catch (AddressException e) {
+			_log.error("Error getting email addresses",e);
 		}
 
 		MailServiceUtil.sendEmail(message);
